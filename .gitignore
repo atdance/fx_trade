@@ -1,0 +1,4 @@
+.settings/
+target/
+build/
+WebContent/WEB-INF/lib
