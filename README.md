@@ -12,11 +12,6 @@ ARCHITECTURE
 
 ![Alt text](restapi.jpg "architecture")
 
---------------   ----------    -------------------
-|DATAPROVIDER|<-->|REST_API| <-->|RICKSHAW FRONTEND| 
---------------   ----------    -------------------
-_____________TOMCAT________    ______BROWSER_____
-
 ENDPOINTS   
 - For testing http://<host>:8080/restapi/rest/trade/gettest?tradeid=1
 - For putting data http://<host>:8080/restapi/rest/trade/add
