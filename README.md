@@ -7,10 +7,20 @@ Java JVM 7 .
 
 LIMITATIONS
 Only two currencies are allowed : EUR, GBP.
-	
+
+ARCHITECTURE
+--------------   ----------    -------------------
+|DATAPROVIDER|<-->|REST_API| <-->|RICKSHAW FRONTEND| 
+--------------   ----------    -------------------
+_____________TOMCAT________    ______BROWSER_____
+
 ENDPOINTS   
-- http://<host>:8080/restapi/rest/trade/gettest?tradeid=1
-- http://<host>:/restapi/fixed.html
+- For testing http://<host>:8080/restapi/rest/trade/gettest?tradeid=1
+- For putting data http://<host>:8080/restapi/rest/trade/add
+ Use set Content-Type to application/json and a payload like this:
+{"userId": "134256", "currencyFrom": "EUR", "currencyTo": "GBP", "amountSell": 
+"900", "amountBuy": "450", "rate": "0.7471", "timePlaced" : "24-JAN-15 10:27:4", "originatingCountry" : "FR"}
+- Frontend for rendering of data http://<host>:/restapi/fixed.html
 
 MESSAGE CONSUMPTION
 - Consumed messages are received to a REST framework and written in RAM data structure.
