@@ -14,7 +14,7 @@ Only two currencies are allowed : EUR, GBP.
 
 ## ENDPOINTS   
 - For testing http://<host>:8080/restapi/rest/trade/gettest?tradeid=1
-- For putting data http://<host>:8080/restapi/rest/trade/add
+- For posting data_ http://<host>:8080/restapi/rest/trade/add
  Use set Content-Type to application/json and a payload like this:
 {"userId": "134256", "currencyFrom": "EUR", "currencyTo": "GBP", "amountSell": 
 "900", "amountBuy": "450", "rate": "0.7471", "timePlaced" : "24-JAN-15 10:27:4", "originatingCountry" : "FR"}
