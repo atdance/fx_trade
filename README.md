@@ -9,6 +9,9 @@ LIMITATIONS
 Only two currencies are allowed : EUR, GBP.
 
 ARCHITECTURE
+
+![Alt text](restapi.jpg "architecture")
+
 --------------   ----------    -------------------
 |DATAPROVIDER|<-->|REST_API| <-->|RICKSHAW FRONTEND| 
 --------------   ----------    -------------------
