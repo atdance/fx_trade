@@ -33,3 +33,9 @@ frontend.
 ## MESSAGE FRONTEND
 An html and javascript page renders graphing currency volume of messages from the (EUR/GBP) currency 
 pair market.
+
+## SECURITY
+- The API is rate limited.
+- Input data is validated.
+- Logged input validation failures.
+- Strong typing: incoming data is strogly typed as quickly as possible. 
