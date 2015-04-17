@@ -59,6 +59,7 @@ public class TradeMessage {
 			throws IllegalArgumentException {
 
 		TradeMessageValidator.getInstance().checkArgString(pUserId);
+		TradeMessageValidator.getInstance().checkValidInputChars(pUserId);
 		TradeMessageValidator.getInstance().checkArgString(pCurrencyFrom);
 		TradeMessageValidator.getInstance().checkArgString(pCurrencyTo);
 		TradeMessageValidator.getInstance().checkArgString(pOriginCountry);

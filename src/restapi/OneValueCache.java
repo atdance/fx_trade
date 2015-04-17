@@ -37,7 +37,7 @@ public class OneValueCache {
 	/**
 	 * @return the astale
 	 */
-	public boolean isAstale() {
+	public boolean isStale() {
 		return astale;
 	}
 

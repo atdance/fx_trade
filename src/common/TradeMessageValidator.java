@@ -61,6 +61,13 @@ public class TradeMessageValidator {
 		}
 	}
 
+	void checkValidInputChars(String s) {
+		if (!s.matches("[A-Za-z0-9]+")) {
+			throw new IllegalArgumentException(
+					"not valid String input, allowed: [A-Za-z0-9]+");
+		}
+	}
+
 	/**
 	 * The value has to be bigger than 100 and lower than 99,000,000.
 	 *

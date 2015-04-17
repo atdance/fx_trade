@@ -42,17 +42,7 @@ public class JSONTradeMessage {
 	}
 
 	public JSONTradeMessage() {
-		// this.pair = new CurrencyPair(currencyFrom, currencyTo);
-		// this.exc = new Exchange(pair, amountSell, amountBuy);
 	}
-
-	// public CurrencyPair getCurrencyPair() {
-	// return pair;
-	// }
-
-	// public Exchange getExchange() {
-	// return exc;
-	// }
 
 	@Override
 	public int hashCode() {
