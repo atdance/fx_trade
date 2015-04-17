@@ -9,8 +9,8 @@ LIMITATIONS
 Only two currencies are allowed : EUR, GBP.
 	
 ENDPOINTS   
-http://<host>:8080/restapi/rest/trade/gettest?tradeid=1
-http://<host>:/restapi/fixed.html
+- http://<host>:8080/restapi/rest/trade/gettest?tradeid=1
+- http://<host>:/restapi/fixed.html
 
 MESSAGE CONSUMPTION
 - Consumed messages are received to a REST framework and written in RAM data structure.
