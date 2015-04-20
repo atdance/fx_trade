@@ -24,7 +24,7 @@ import common.TradeMessage;
  *
  *
  */
-class Services<PAYLOAD extends TradeMessage> {
+public class Services<PAYLOAD extends TradeMessage> {
 	/**
 	 * used for responses to clients of rest API.
 	 */
@@ -37,7 +37,7 @@ class Services<PAYLOAD extends TradeMessage> {
 	 */
 	protected static ObjectMapper mapper = null;
 
-	final OperationsInterface vMapper = new TradeMapper();
+	protected OperationsInterface vMapper = new TradeMapper();
 
 	protected Services() {
 	}

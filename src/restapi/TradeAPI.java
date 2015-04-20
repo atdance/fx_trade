@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.glassfish.jersey.media.sse.EventChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +86,7 @@ public class TradeAPI extends APICommon {
 		} catch (Exception ex) {
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
-		LOG.info("" + timer.toString());
+		LOG.info("elapsed " + timer.toString());
 		return res;
 	}
 
@@ -116,7 +117,7 @@ public class TradeAPI extends APICommon {
 	 *            which is a json on wire representation of a TradeMessage
 	 * @return Ok or NOk response
 	 */
-	@PUT
+	@POST
 	@Path("/add")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
@@ -131,6 +132,7 @@ public class TradeAPI extends APICommon {
 
 			cacheGraph.clear();
 			cacheAll.clear();
+			websocket.WsAnnotation.sendAll();
 
 		} catch (IllegalArgumentException ex) {
 			String msg = ex.getMessage();
@@ -144,5 +146,19 @@ public class TradeAPI extends APICommon {
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return res;
+	}
+
+	/**
+	 * Streams server-sent events.
+	 *
+	 * @return Long-running response in form of an event channel.
+	 */
+	@GET
+	@Path("events")
+	@Produces(EventChannel.SERVER_SENT_EVENTS)
+	public EventChannel getEvents() {
+		EventChannel ec = new EventChannel();
+		test.DataProvider.addEventChannel(ec);
+		return ec;
 	}
 }

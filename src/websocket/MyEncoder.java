@@ -29,6 +29,7 @@ public class MyEncoder implements Encoder.Text<Map<String, Object>>,
 	protected static ObjectMapper mapper = null;
 
 	private static Logger LOG = null;
+
 	static {
 		LOG = LoggerFactory.getLogger(MyEncoder.class);
 		mapper = new ObjectMapper();
@@ -72,7 +73,7 @@ public class MyEncoder implements Encoder.Text<Map<String, Object>>,
 	/*
 	 * We can always return true, as this decoder can work with any messages
 	 * used by this application
-	 *
+	 * 
 	 * @see javax.net.websocket.Decoder.Text#willDecode(java.lang.String)
 	 */
 	@Override

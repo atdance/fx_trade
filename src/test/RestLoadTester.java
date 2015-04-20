@@ -94,7 +94,9 @@ public class RestLoadTester {
 
 				}
 			} finally {
-				client.close();
+				if (null != client) {
+					client.close();
+				}
 			}
 		}
 	}

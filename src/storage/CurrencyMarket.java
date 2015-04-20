@@ -26,6 +26,11 @@ import common.TradeMessage;
  */
 final public class CurrencyMarket {
 
+	/**
+	 * used for caching the latest incoming data
+	 */
+	private Map<String, Object> cachedVolume = null;
+
 	private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 	private final Lock readLock = rwl.readLock();
 	private final Lock writeLock = rwl.writeLock();
@@ -75,13 +80,33 @@ final public class CurrencyMarket {
 
 	public void add(Exchange obj) {
 		writeLock.lock();
-
+		LOG.debug(" cur1 add " + obj.amountBuy);
 		try {
-
 			exchanges.add(obj);
-			// LOG.debug(" market add " + obj.amountBuy);
+
 			currency1VolumeTotal = currency1VolumeTotal.add(obj.amountSell);
 			currency2VolumeTotal = currency2VolumeTotal.add(obj.amountBuy);
+
+			cachedVolume = null;
+
+			cachedVolume = new LinkedHashMap<String, Object>();
+			cachedVolume.put(Currencies.EUR.name().toLowerCase(),
+					currency1VolumeTotal.intValue());
+			cachedVolume.put(Currencies.GBP.name().toLowerCase(),
+					currency2VolumeTotal.intValue());
+
+		} finally {
+			writeLock.unlock();
+		}
+	}
+
+	public void addLatest(Exchange obj) {
+		writeLock.lock();
+
+		try {
+			LOG.debug(" addlatest " + obj.amountBuy);
+			cur1Buffer.add(obj.amountBuy);
+			cur2Buffer.add(obj.amountSell);
 		} finally {
 			writeLock.unlock();
 		}
@@ -100,18 +125,6 @@ final public class CurrencyMarket {
 		return res;
 	}
 
-	public void addLatest(Exchange obj) {
-		writeLock.lock();
-
-		try {
-			LOG.debug(" cur1 addlatest " + obj.amountBuy);
-			cur1Buffer.add(obj.amountBuy);
-			cur2Buffer.add(obj.amountSell);
-		} finally {
-			writeLock.unlock();
-		}
-	}
-
 	/**
 	 * List the total of handled volume of two currencies .
 	 *
@@ -120,23 +133,27 @@ final public class CurrencyMarket {
 	public Map<String, Object> volume() {
 		readLock.lock();
 
-		Map<String, Object> ramo = null;
+		Map<String, Object> res = null;
 
 		try {
-			LOG.info(" cur1 " + currency1VolumeTotal.intValue());
 
-			ramo = new LinkedHashMap<String, Object>();
-			ramo.put(Currencies.EUR.name().toLowerCase(),
-					currency1VolumeTotal.intValue());
-			ramo.put(Currencies.GBP.name().toLowerCase(),
-					currency2VolumeTotal.intValue());
+			if (cachedVolume != null) {
+				LOG.info(" from cache,cur1 " + currency1VolumeTotal.intValue());
+				res = cachedVolume;
+			} else {
+				LOG.info(" not from cache,cur1 "
+						+ currency1VolumeTotal.intValue());
 
-			List<Map<String, Object>> lst = new ArrayList<Map<String, Object>>();
-			lst.add(ramo);
+				res = new LinkedHashMap<String, Object>();
+				res.put(Currencies.EUR.name().toLowerCase(),
+						currency1VolumeTotal.intValue());
+				res.put(Currencies.GBP.name().toLowerCase(),
+						currency2VolumeTotal.intValue());
+			}
 		} finally {
 			readLock.unlock();
 		}
-		return ramo;
+		return res;
 	}
 
 	private final TradeMessage defaultMsg = new TradeMessage("134256", "EUR",

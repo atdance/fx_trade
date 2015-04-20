@@ -77,8 +77,6 @@ public class TradeServices<PAYLOAD extends TradeMessage> extends
 	 * @throws JsonProcessingException
 	 */
 	public Response volume() throws JsonProcessingException {
-
-		// List<common.Exchange>
 		Map<String, Object> resp = vMapper.volume();
 
 		return Response.status(Status.OK)

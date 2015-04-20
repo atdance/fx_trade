@@ -1,80 +1,100 @@
-/*
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package websocket;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.websocket.EncodeException;
+import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
-import javax.websocket.PongMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import restapi.TradeAPI;
+import storage.CurrencyMarket;
+
+import common.MyTime;
+
 /**
  */
-@ServerEndpoint(value = "/websocket/wsAnnotation", encoders = { websocket.MyEncoder.class })
-public class wsAnnotation {
+@ServerEndpoint(value = "/websocket/WsAnnotation", encoders = { websocket.MyEncoder.class })
+public class WsAnnotation {
+
+	Map<String, Object> currencyVolume = null;
+
+	CurrencyMarket mkt = storage.CurrencyMarket.getInstance();
+
+	private static Set<Session> sessions = new HashSet<>();
+
+	static Logger LOG = null;
+
+	static {
+		LOG = LoggerFactory.getLogger(TradeAPI.class);
+	}
+
+	@OnOpen
+	public void onOpen(Session session) {
+		MyTime timer = new MyTime();
+		sessions.add(session);
+
+		currencyVolume = mkt.volume();
+		try {
+			if (session.isOpen()) {
+				session.getBasicRemote().sendObject(currencyVolume);
+			}
+		} catch (IOException e) {
+			try {
+				session.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} catch (EncodeException e) {
+			e.printStackTrace();
+		}
+		LOG.info("elapsed " + timer.toString());
+	}
+
+	@OnClose
+	public void onClose(Session session) {
+		sessions.remove(session);
+	}
 
 	@OnMessage
 	public void echoTextMessage(Session session, String msg, boolean last) {
-		Map<String, Object> resp = storage.CurrencyMarket.getInstance()
-				.volume();
-
+		currencyVolume = mkt.volume();
+		MyTime timer = new MyTime();
 		try {
 			if (session.isOpen()) {
-				session.getBasicRemote().sendObject(resp);
+				session.getBasicRemote().sendObject(currencyVolume);
 			}
 		} catch (IOException e) {
 			try {
 				session.close();
 			} catch (IOException e1) {
-				// Ignore
+				e1.printStackTrace();
 			}
 		} catch (EncodeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		LOG.info("elapsed " + timer.toString());
 	}
 
-	@OnMessage
-	public void echoBinaryMessage(Session session, ByteBuffer bb, boolean last) {
-		try {
-			if (session.isOpen()) {
-				session.getBasicRemote().sendBinary(bb, last);
-			}
-		} catch (IOException e) {
-			try {
-				session.close();
-			} catch (IOException e1) {
-				// Ignore
+	public static void sendAll() {
+		MyTime timer = new MyTime();
+		synchronized (sessions) {
+			Map<String, Object> volume = storage.CurrencyMarket.getInstance()
+					.volume();
+			for (Session session : sessions) {
+				if (session.isOpen()) {
+					session.getAsyncRemote().sendObject(volume);
+				}
 			}
 		}
-	}
-
-	/**
-	 * Process a received pong. This is a NO-OP.
-	 *
-	 * @param pm
-	 *            Ignored.
-	 */
-	@OnMessage
-	public void echoPongMessage(PongMessage pm) {
-		// NO-OP
+		LOG.info("elapsed " + timer.toString());
 	}
 }
