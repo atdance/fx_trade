@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -116,7 +116,7 @@ public class TradeAPI extends APICommon {
 	 *            which is a json on wire representation of a TradeMessage
 	 * @return Ok or NOk response
 	 */
-	@POST
+	@PUT
 	@Path("/add")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })

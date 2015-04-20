@@ -24,13 +24,13 @@ import common.TradeMessage;
  * consistency implemented with a ReentrantReadWriteLock .
  *
  */
-final public class CurrencyMarket {
+public class CurrencyMarket {
 
 	private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 	private final Lock readLock = rwl.readLock();
 	private final Lock writeLock = rwl.writeLock();
 
-	private final OnlyAddableList<Exchange> exchanges = new OnlyAddableList<Exchange>();
+	OnlyAddableList<Exchange> exchanges = new OnlyAddableList<Exchange>();
 
 	private volatile static CurrencyMarket localInstance = null;
 
@@ -41,13 +41,13 @@ final public class CurrencyMarket {
 	 * Store the total of handled volume of one currency .
 	 *
 	 */
-	private BigDecimal currency1VolumeTotal = new BigDecimal(0, MyMath.MC);
+	BigDecimal currency1VolumeTotal = new BigDecimal(0, MyMath.MC);
 	/**
 	 * Store the total of handled volume of one currency .
 	 *
 	 */
 
-	private BigDecimal currency2VolumeTotal = new BigDecimal(0, MyMath.MC);
+	BigDecimal currency2VolumeTotal = new BigDecimal(0, MyMath.MC);
 
 	private static Logger LOG = null;
 	static {
