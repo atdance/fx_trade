@@ -1,0 +1,228 @@
+<!doctype>
+<head>
+	<title>FX Trade</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+	<link type="text/css" rel="stylesheet" href="http://code.shutterstock.com/rickshaw/src/css/graph.css">
+	<link type="text/css" rel="stylesheet" href="http://code.shutterstock.com/rickshaw//src/css/detail.css">
+	<link type="text/css" rel="stylesheet" href="http://code.shutterstock.com/rickshaw//src/css/legend.css">
+	<link type="text/css" rel="stylesheet" href="http://code.shutterstock.com/rickshaw/examples/css/extensions.css">
+
+	<script src="http://code.shutterstock.com/rickshaw/vendor/d3.v3.js"></script>
+	<script src="http://code.shutterstock.com/rickshaw/rickshaw.js"></script>
+<script type="text/javascript" 
+   src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
+    <script>
+         </script>
+    
+</head>
+
+<body>
+
+<!--div id="content">
+	<div id="chart"></div>
+</div -->
+
+<div id="chart_container">
+	<div id="chart"></div>
+	<div id="legend_container">
+		<div id="smoother" title="Smoothing"></div>
+		<div id="legend"></div>
+	</div>
+	<div id="slider"></div>
+</div>
+
+<script>
+function print_r(printthis, returnoutput) {
+    var output = '';
+
+    if($.isArray(printthis) || typeof(printthis) == 'object') {
+        for(var i in printthis) {
+            output += i + ' : ' + print_r(printthis[i], true) + '\n';
+            //output += print_r(printthis[i], true);
+        }
+    }else {
+        output += printthis;
+    }
+    if(returnoutput && returnoutput == true) {
+        return output;
+    }else {
+        alert(output);
+    }
+}
+
+var remote = "http://2.65.155.63:8080/restapi/rest/trade/volume";
+var test =  "http://web.ict.kth.se/~michelec/fixed.php";
+var local = "http://localhost:8080/restapi/rest/trade/volume";
+var myURL = local;	
+var tv = 2200;
+var globaldata;
+
+var ws = null;
+var wsURL = 'ws://' + window.location.host + "/restapi/websocket/wsAnnotation";
+//document.getElementById('target').value = myURL;
+   
+
+function setConnected(connected) {
+    document.getElementById('connect').disabled = connected;
+    document.getElementById('disconnect').disabled = !connected;
+    document.getElementById('echo').disabled = !connected;
+}
+
+function connect() {
+    if (wsURL == '') {
+        alert('Please select server side connection implementation.');
+        return;
+    }
+    if ('WebSocket' in window) {
+        ws = new WebSocket(wsURL);
+    } else if ('MozWebSocket' in window) {
+        ws = new MozWebSocket(wsURL);
+    } else {
+        alert('WebSocket is not supported by this browser.');
+        return;
+    }
+    ws.onopen = function () {
+        setConnected(true);
+        log('Info: WebSocket connection opened.');
+    };
+    ws.onmessage = function (event) {
+        log('Received: ' + event.data);       
+        globaldata = JSON.parse(event.data);
+    };
+    ws.onclose = function (event) {
+        setConnected(false);
+        log('Info: WebSocket connection closed, Code: ' + event.code + (event.reason == "" ? "" : ", Reason: " + event.reason));
+    };
+}
+
+function disconnect() {
+    if (ws != null) {
+        ws.close();
+        ws = null;
+    }
+    setConnected(false);
+}
+
+function sendMsg() {
+    if (ws != null) {
+        var message = document.getElementById('message').value;
+        log('Sent: ' + message);
+        ws.send(message);
+    } else {
+        alert('WebSocket connection not established, please connect.');
+    }
+}
+
+  
+function log(message) {
+    var console = document.getElementById('response_list');
+    var p = document.createElement('p');
+    p.style.wordWrap = 'break-word';
+    p.appendChild(document.createTextNode(message));
+    console.appendChild(p);
+    while (console.childNodes.length > 3) {
+        console.removeChild(console.firstChild);
+    }
+    console.scrollTop = console.scrollHeight;
+}
+
+	
+// instantiate our graph!
+var graph = new Rickshaw.Graph( {
+	element: document.getElementById("chart"),
+	width: 900,
+	height: 500,
+	renderer: 'line',
+	//series: [ {
+	//	name: "eur",
+	//	data:[ { x: -1893456000, y: 92228531 }, { x: -1577923200, y: 106021568 }, { x: -1262304000, y: 123202660 } ], 
+	//	timeInterval: tv,
+	//	maxDataPoints: 100,
+	//	timeBase: new Date().getTime() / 1000
+	//} ]	
+	
+	series: new Rickshaw.Series.FixedDuration(
+			[{ name: 'eur' },{ name: 'gbp' }],
+			undefined, {
+		timeInterval: tv,
+		maxDataPoints: 100,
+		timeBase: new Date().getTime() / 1000
+	}) 
+} );
+
+graph.render();
+
+var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+	graph: graph
+} );
+
+var legend = new Rickshaw.Graph.Legend( {
+	graph: graph,
+	element: document.getElementById('legend')
+
+} );
+
+var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+	graph: graph,
+	legend: legend
+} );
+
+var axes = new Rickshaw.Graph.Axis.Time( {
+	graph: graph
+} );
+axes.render();
+
+// add some data every so often
+var i = 0;
+
+var iv = setInterval( function() {
+	//getLatestData(); 
+	sendMsg();
+	graph.series.addData(globaldata);
+	graph.render();
+}, tv );
+
+
+var	getLatestData = function() {	
+	   $.ajax({
+     	dataType: "json",
+      url: myURL,
+      success: function(data) {
+         //print_r(data );
+         globaldata = data;
+      }
+    });	
+};
+
+var getLatestData2 =  function(){
+	var data = { eur: Math.floor(Math.random() * 40) + 120 };
+	var randInt = Math.floor(Math.random()*100);
+	data.gbp = (Math.sin(i++ / 40) + 4) * (randInt + 400);
+	globaldata = data;
+	return data;		
+};
+</script>
+
+    <div id="connect-container">
+        <div>
+            <input id="target" type="text" size="40" style="width: 350px"/>
+        </div>
+        <div>
+            <button id="connect" onclick="connect();">Connect</button>
+            <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+        </div>
+        <div>
+            <textarea id="message" style="width: 350px">::</textarea>
+        </div>
+        <div>
+            <button id="echo" onclick="sendMsg();" disabled="disabled">Echo message</button>
+        </div>
+    </div>
+    <div id="console-container">
+        <div id="response_list"/>
+    </div>
+
+</body>
+</html>
