@@ -12,10 +12,9 @@ import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.server.JSONP;
 
-import restapi.APICommon;
 import services.TradeServices;
-
 import common.TradeMessage;
+import front.restapi.APICommon;
 
 /**
  * REST operations for a TradeAPI .

@@ -9,7 +9,7 @@
     </init-param>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>restapi.AppConfig</param-value>
+      <param-value>front.restapi.AppConfig</param-value>
     </init-param>
     <init-param>
       <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
@@ -27,7 +27,7 @@
   <filter>
     <filter-name>RateLimiter</filter-name>
     <filter-class>
-        filter.RateLimiter
+        front.filter.RateLimiter
     </filter-class>
 </filter>
 <filter-mapping>

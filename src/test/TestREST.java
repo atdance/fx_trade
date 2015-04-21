@@ -20,10 +20,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import restapi.JSONTradeMessage;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import common.MyMath;
+import front.restapi.JSONTradeMessage;
 
 /**
  * test some operations towards the test API

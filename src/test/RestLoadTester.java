@@ -15,10 +15,10 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import restapi.JSONTradeMessage;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import common.MyMath;
+import front.restapi.JSONTradeMessage;
 
 public class RestLoadTester {
 

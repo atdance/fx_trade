@@ -15,10 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import storage.CurrencyMarket;
-import websocket.MyEncoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import common.Currencies;
+import front.websocket.MyEncoder;
 
 /**
  * Experiments with Encoder which encodes the object data into messages which
