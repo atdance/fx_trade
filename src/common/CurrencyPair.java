@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * A pair of currencies
+ * A currencyPair of currencies
  *
  */
 public class CurrencyPair {
@@ -19,7 +19,7 @@ public class CurrencyPair {
 	}
 
 	/**
-	 * thread-safe immutable class representing a Currency pair.
+	 * thread-safe immutable class representing a Currency currencyPair.
 	 */
 	public CurrencyPair(String currencyFrom, String currencyTo) {
 		this.currencyFrom = currencyFrom;

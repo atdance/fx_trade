@@ -1,4 +1,4 @@
-package test;
+package test.lowlevel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -57,7 +57,7 @@ public class RestSErvlet extends APICommon {
 		try {
 			return resp;
 		} catch (Exception ex) {
-			System.out.println("TradeApi exc...");
+			System.out.println("TradeApi exchange...");
 			ex.printStackTrace();
 			System.out.println(ex);
 		}

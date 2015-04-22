@@ -1,7 +1,7 @@
 /**
  *
  */
-package test;
+package test.lowlevel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

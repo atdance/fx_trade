@@ -1,4 +1,4 @@
-package test;
+package test.lowlevel;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +18,8 @@ import services.Services;
 import common.TradeMessage;
 
 /**
- * Simple in-memory data storage for the application.
+ * First tests with websocket. Simple in-memory data storage for the
+ * application.
  */
 public class DataProvider<PAYLOAD extends TradeMessage> extends
 		Services<PAYLOAD> {
@@ -26,17 +27,17 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	/** Broadcaster for server-sent events. */
 	private static SseBroadcaster sseBroadcaster = new SseBroadcaster();
 
-	/** Map that stores web socket sessions corresponding to a given drawing ID. */
+	/** Map that stores web socket sessions corresponding to a given X ID. */
 	private static final MultivaluedHashMap<Integer, Session> webSockets = new MultivaluedHashMap<>();
 
-	synchronized boolean addShape(int drawingId) {
-		Map<String, Object> drawing = getVolume();
-		if (drawing != null) {
-			// if (drawing.shapes == null) {
-			// drawing.shapes = new ArrayList<>();
+	synchronized boolean addL(int xId) {
+		Map<String, Object> X = getVolume();
+		if (X != null) {
+			// if (X.list == null) {
+			// X.list = new ArrayList<>();
 			// }
-			// drawing.shapes.add(shape);
-			wsBroadcast(drawingId, drawing);
+			// X.list.add(obj);
+			wsBroadcast(xId, X);
 			return true;
 		} else {
 			return false;
@@ -55,21 +56,21 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	}
 
 	/**
-	 * Registers a new web socket session and associates it with a drawing ID.
-	 * This method should be called when a client opens a web socket connection
-	 * to a particular drawing URI.
+	 * Registers a new web socket session and associates it with a X ID. This
+	 * method should be called when a client opens a web socket connection to a
+	 * particular X URI.
 	 *
-	 * @param drawingId
-	 *            Drawing ID to associate the web socket session with.
+	 * @param xId
+	 *            X ID to associate the web socket session with.
 	 * @param session
 	 *            New web socket session to be registered.
 	 */
-	synchronized void addWebSocket(int drawingId, Session session) {
-		webSockets.add(drawingId, session);
-		Map<String, Object> drawing = getVolume();
-		if (drawing != null) {
+	synchronized void addWebSocket(int xId, Session session) {
+		webSockets.add(xId, session);
+		Map<String, Object> X = getVolume();
+		if (X != null) {
 			try {
-				session.getRemote().sendObject(drawing);
+				session.getRemote().sendObject(X);
 			} catch (IOException | EncodeException ex) {
 				Logger.getLogger(DataProvider.class.getName()).log(
 						Level.SEVERE, null, ex);
@@ -78,35 +79,34 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	}
 
 	/**
-	 * Removes the existing web socket session associated with a drawing ID.
-	 * This method should be called when a client closes the web socket
-	 * connection to a particular drawing URI.
+	 * Removes the existing web socket session associated with a X ID. This
+	 * method should be called when a client closes the web socket connection to
+	 * a particular X URI.
 	 *
-	 * @param drawingId
-	 *            ID of the drawing the web socket session is associated with.
+	 * @param xId
+	 *            ID of the X the web socket session is associated with.
 	 * @param session
 	 *            Web socket session to be removed.
 	 */
-	static synchronized void removeWebSocket(int drawingId, Session session) {
-		List<Session> sessions = webSockets.get(drawingId);
+	static synchronized void removeWebSocket(int xId, Session session) {
+		List<Session> sessions = webSockets.get(xId);
 		if (sessions != null) {
 			sessions.remove(session);
 		}
 	}
 
 	/**
-	 * Broadcasts the newly added shape to all web sockets associated with the
-	 * affected drawing.
+	 * Broadcasts the newly added obj to all web sockets associated with the
+	 * affected X.
 	 *
-	 * @param drawingId
-	 *            ID of the affected drawing.
-	 * @param shape
-	 *            Shape that was added to the drawing or
-	 *            {@link ShapeCoding#SHAPE_CLEAR_ALL} if the drawing was cleared
-	 *            (i.e. all shapes were deleted).
+	 * @param xId
+	 *            ID of the affected X.
+	 * @param obj
+	 *            obj that was added to the X or {@link objCoding#obj_CLEAR_ALL}
+	 *            if the X was cleared (i.e. all list were deleted).
 	 */
-	private static void wsBroadcast(int drawingId, Map<String, Object> DR) {
-		List<Session> sessions = webSockets.get(drawingId);
+	private static void wsBroadcast(int xId, Map<String, Object> DR) {
+		List<Session> sessions = webSockets.get(xId);
 		if (sessions != null) {
 			for (Session session : sessions) {
 				try {

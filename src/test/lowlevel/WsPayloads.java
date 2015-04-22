@@ -1,4 +1,4 @@
-package test;
+package test.lowlevel;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import front.websocket.MyEncoder;
  * Experiments with Encoder which encodes the object data into messages which
  * can be transported over the websocket connection.
  */
-public class wsPayloads {
+public class WsPayloads {
 
 	/**
 	 * A com.fasterxml.jackson.databind.ObjectMapper that serializes any Java
@@ -124,7 +124,7 @@ public class wsPayloads {
 			s = jsonObject.toString();
 		}
 		// try {
-		// s = mapper.writeValueAsString(resp);
+		// s = serializer.writeValueAsString(resp);
 		// } catch (JsonProcessingException e) {
 		// e.printStackTrace();
 		// }

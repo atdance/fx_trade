@@ -19,9 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TradeMessageValidator {
 
-	private final String dateFormat = "dd-MMM-yy hh:mm:ss";
-	private final SimpleDateFormat formatter = new SimpleDateFormat(dateFormat,
-			Locale.GERMAN);
+	private final static String dateFormat = "dd-MMM-yy hh:mm:ss";
 
 	private final java.util.List<String> COUNTRIES = Arrays.asList(Locale
 			.getISOCountries());
@@ -52,6 +50,27 @@ public class TradeMessageValidator {
 	 */
 	public static TradeMessageValidator getInstance() {
 		return INSTANCE;
+	}
+
+	public void validate(TradeMessage pMsg) throws IllegalArgumentException {
+		checkArgString(pMsg.userId);
+		checkValidInputChars(pMsg.userId);
+		checkArgString(pMsg.currencyFrom);
+		checkArgString(pMsg.currencyTo);
+		checkArgString(pMsg.originatingCountry);
+
+		checkCurrency(pMsg.currencyFrom);
+		checkCurrency(pMsg.currencyTo);
+
+		checkAmount(pMsg.amountSell);
+		checkAmount(pMsg.amountBuy);
+
+		checkRate(pMsg.rate);
+
+		checkDateString(pMsg.timePlaced);
+
+		checkArgString(pMsg.originatingCountry);
+		checkCountry(pMsg.originatingCountry);
 	}
 
 	void checkArgString(String pVal) throws IllegalArgumentException {
@@ -116,17 +135,17 @@ public class TradeMessageValidator {
 
 	void checkDateString(String pVal) {
 		try {
-			Date date = formatter.parse(pVal);
+			Date date = new SimpleDateFormat(dateFormat, Locale.GERMAN)
+					.parse(pVal);
 		} catch (ParseException e) {
 			LOG.error(MSG_FORMAT + dateFormat + " for input string " + pVal);
 			throw new IllegalArgumentException(MSG_FORMAT + dateFormat
-					+ " for input string " + pVal);
+					+ " for input string " + pVal + " " + e.getMessage());
 		} catch (NumberFormatException e) {
 			LOG.error(MSG_FORMAT + dateFormat + " for input string " + pVal);
 			throw new IllegalArgumentException(MSG_FORMAT + dateFormat
-					+ " for input string " + pVal);
+					+ " for input string " + pVal + " " + e.getMessage());
 		}
-
 	}
 
 }

@@ -35,7 +35,7 @@ public class Services<PAYLOAD extends TradeMessage> {
 	 * A com.fasterxml.jackson.databind.ObjectMapper that serializes any Java
 	 * value as a String.
 	 */
-	protected static ObjectMapper mapper = null;
+	protected static ObjectMapper serializer = null;
 
 	protected OperationsInterface vMapper = new TradeMapper();
 
@@ -45,7 +45,7 @@ public class Services<PAYLOAD extends TradeMessage> {
 	private static Logger LOG = null;
 	static {
 		LOG = LoggerFactory.getLogger(Services.class);
-		mapper = new ObjectMapper();
+		serializer = new ObjectMapper();
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class Services<PAYLOAD extends TradeMessage> {
 
 		try {
 			vRes = Response.status(Status.OK)
-					.entity(mapper.writeValueAsString(vMapper.selectById(pID)))
+					.entity(serializer.writeValueAsString(vMapper.selectById(pID)))
 					.build();
 
 		} catch (final Exception ex) {
@@ -111,7 +111,7 @@ public class Services<PAYLOAD extends TradeMessage> {
 			vApiResp.setStatus(OK);
 			vApiResp.setMessage(pOpType.name() + SUCCESS);
 
-			final String resString = mapper.writeValueAsString(vApiResp);
+			final String resString = serializer.writeValueAsString(vApiResp);
 			res = Response.status(Status.OK).entity(resString).build();
 		} catch (final Exception ex) {
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();

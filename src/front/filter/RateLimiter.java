@@ -31,6 +31,11 @@ public class RateLimiter implements Filter {
 	long now = 0L, before = 0L, elapsedMillis = 0L;
 
 	/**
+	 * disables the filter if false,used for unit tests.
+	 */
+	private static boolean enabled;
+
+	/**
 	 * Default constructor.
 	 */
 	public RateLimiter() {
@@ -55,7 +60,7 @@ public class RateLimiter implements Filter {
 
 		elapsedMillis = TimeUnit.NANOSECONDS.toMillis(now - before);
 
-		if (elapsedMillis < this.TIME_LIMIT_MILLIS) {
+		if (enabled & elapsedMillis < this.TIME_LIMIT_MILLIS) {
 			LOG.info("NOK  " + elapsedMillis + " vs " + TIME_LIMIT_MILLIS);
 			res.sendError(429);
 			res.addIntHeader("Retry/After", (int) TIME_LIMIT_MILLIS);
@@ -83,5 +88,13 @@ public class RateLimiter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
+	}
+
+	public static void enable() {
+		enabled = true;
+	}
+
+	public static void disable() {
+		enabled = false;
 	}
 }

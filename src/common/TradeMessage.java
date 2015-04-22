@@ -45,12 +45,12 @@ public class TradeMessage {
 	public String timePlaced = null;
 	public String originatingCountry = null;
 
-	public CurrencyPair pair = null;
-	public Exchange exc;
+	public CurrencyPair currencyPair = null;
+	public Exchange exchange;
 
 	public TradeMessage() {
-		this.pair = new CurrencyPair(currencyFrom, currencyTo);
-		this.exc = new Exchange(pair, amountSell, amountBuy);
+		this.currencyPair = new CurrencyPair(currencyFrom, currencyTo);
+		this.exchange = new Exchange(currencyPair, amountSell, amountBuy);
 	}
 
 	public TradeMessage(String pUserId, String pCurrencyFrom,
@@ -58,36 +58,17 @@ public class TradeMessage {
 			BigDecimal pRate, String pTimePlaced, String pOriginCountry)
 			throws IllegalArgumentException {
 
-		TradeMessageValidator.getInstance().checkArgString(pUserId);
-		TradeMessageValidator.getInstance().checkValidInputChars(pUserId);
-		TradeMessageValidator.getInstance().checkArgString(pCurrencyFrom);
-		TradeMessageValidator.getInstance().checkArgString(pCurrencyTo);
-		TradeMessageValidator.getInstance().checkArgString(pOriginCountry);
 		this.userId = pUserId;
-
-		TradeMessageValidator.getInstance().checkCurrency(pCurrencyFrom);
-		TradeMessageValidator.getInstance().checkCurrency(pCurrencyTo);
-
 		this.currencyFrom = pCurrencyFrom;
 		this.currencyTo = pCurrencyTo;
-
-		TradeMessageValidator.getInstance().checkAmount(pAmountSell);
-		TradeMessageValidator.getInstance().checkAmount(pAmountBuy);
 		this.amountSell = pAmountSell;
 		this.amountBuy = pAmountBuy;
-
-		TradeMessageValidator.getInstance().checkRate(pRate);
 		this.rate = pRate;
-
-		TradeMessageValidator.getInstance().checkDateString(pTimePlaced);
 		this.timePlaced = pTimePlaced;
-
-		TradeMessageValidator.getInstance().checkArgString(pOriginCountry);
-		TradeMessageValidator.getInstance().checkCountry(pOriginCountry);
 		this.originatingCountry = pOriginCountry;
-
-		this.pair = new CurrencyPair(pCurrencyFrom, pCurrencyTo);
-		this.exc = new Exchange(pair, pAmountSell, pAmountBuy);
+		this.currencyPair = new CurrencyPair(pCurrencyFrom, pCurrencyTo);
+		this.exchange = new Exchange(currencyPair, pAmountSell, pAmountBuy);
+		TradeMessageValidator.getInstance().validate(this);
 	}
 
 	public TradeMessage(JSONTradeMessage msg) {
@@ -96,11 +77,11 @@ public class TradeMessage {
 	}
 
 	public CurrencyPair getCurrencyPair() {
-		return pair;
+		return currencyPair;
 	}
 
 	public Exchange getExchange() {
-		return exc;
+		return exchange;
 	}
 
 	@Override

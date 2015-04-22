@@ -18,11 +18,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class AppConfig extends ResourceConfig {
 
 	public AppConfig() {
-		super(front.restapi.TradeAPI.class, common.CurrencyPair.class,
-				common.Exchange.class, common.Countries.class,
-				storage.CurrencyMarket.class, common.Currencies.class,
-				common.TradeMessage.class,
-				// register Jackson ObjectMapper resolver
+		super(front.restapi.TradeAPI.class, common.TradeMessage.class,
+		// register Jackson ObjectMapper resolver
 				MyObjectMapperProvider.class, JacksonFeature.class);
 
 		packages("restapi;common");

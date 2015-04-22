@@ -42,8 +42,8 @@ public class MyEncoder implements Encoder.Text<Map<String, Object>>,
 				getClass().getClassLoader());
 
 		System.out.println("decode..........");
-		Map<String, Object> shape = new HashMap<String, Object>();
-		return shape;
+		Map<String, Object> obj = new HashMap<String, Object>();
+		return obj;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class MyEncoder implements Encoder.Text<Map<String, Object>>,
 	/*
 	 * We can always return true, as this decoder can work with any messages
 	 * used by this application
-	 * 
+	 *
 	 * @see javax.net.websocket.Decoder.Text#willDecode(java.lang.String)
 	 */
 	@Override

@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotationclass to mark mapper
+ * Annotationclass to mark serializer
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

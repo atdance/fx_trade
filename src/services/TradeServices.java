@@ -67,7 +67,7 @@ public class TradeServices<PAYLOAD extends TradeMessage> extends
 		List<common.Exchange> resp = vMapper.selectAll();
 
 		return Response.status(Status.OK)
-				.entity(mapper.writeValueAsString(resp)).build();
+				.entity(serializer.writeValueAsString(resp)).build();
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class TradeServices<PAYLOAD extends TradeMessage> extends
 		Map<String, Object> resp = vMapper.volume();
 
 		return Response.status(Status.OK)
-				.entity(mapper.writeValueAsString(resp)).build();
+				.entity(serializer.writeValueAsString(resp)).build();
 
 	}
 

@@ -52,8 +52,7 @@ public class TradeAPI extends APICommon {
 	 */
 	@GET
 	@Path("/gettest")
-	@Produces({ "application/javascript", MediaType.TEXT_PLAIN,
-			MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
 	public Response readTrade(@Context HttpServletRequest request,
 			@QueryParam("tradeid") final Long pID) {
 		LOG.info("GET");
@@ -149,7 +148,7 @@ public class TradeAPI extends APICommon {
 	}
 
 	/**
-	 * Streams server-sent events.
+	 * Streams server-sent events. Not used
 	 *
 	 * @return Long-running response in form of an event channel.
 	 */
@@ -158,7 +157,7 @@ public class TradeAPI extends APICommon {
 	@Produces(EventChannel.SERVER_SENT_EVENTS)
 	public EventChannel getEvents() {
 		EventChannel ec = new EventChannel();
-		test.DataProvider.addEventChannel(ec);
+		test.lowlevel.DataProvider.addEventChannel(ec);
 		return ec;
 	}
 }

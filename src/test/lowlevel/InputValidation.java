@@ -1,7 +1,7 @@
 /**
  *
  */
-package test;
+package test.lowlevel;
 
 import org.junit.After;
 import org.junit.Before;
