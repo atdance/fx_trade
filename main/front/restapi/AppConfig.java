@@ -19,7 +19,8 @@ public class AppConfig extends ResourceConfig {
 
 	public AppConfig() {
 		super(front.restapi.TradeAPI.class, common.TradeMessage.class,
-		// register Jackson ObjectMapper resolver
+				common.Volume.class,
+				// register Jackson ObjectMapper resolver
 				MyObjectMapperProvider.class, JacksonFeature.class);
 
 		packages("restapi;common");

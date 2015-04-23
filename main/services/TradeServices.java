@@ -1,7 +1,6 @@
 package services;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -77,11 +76,9 @@ public class TradeServices<PAYLOAD extends TradeMessage> extends
 	 * @throws JsonProcessingException
 	 */
 	public Response volume() throws JsonProcessingException {
-		Map<String, Object> resp = vMapper.volume();
-
 		return Response.status(Status.OK)
-				.entity(serializer.writeValueAsString(resp)).build();
-
+				.entity(serializer.writeValueAsString(vMapper.volume()))
+				.build();
 	}
 
 }

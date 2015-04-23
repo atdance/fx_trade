@@ -1,8 +1,5 @@
 package front.websocket;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.net.websocket.DecodeException;
 import javax.net.websocket.Decoder;
 import javax.websocket.EncodeException;
@@ -14,13 +11,13 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.Volume;
 
 /**
  * Encoder which encodes the object data into messages which can be transported
  * over the websocket connection.
  */
-public class MyEncoder implements Encoder.Text<Map<String, Object>>,
-		Decoder.Text<Map<String, Object>> {
+public class MyEncoder implements Encoder.Text<Volume>, Decoder.Text<Volume> {
 
 	/**
 	 * A com.fasterxml.jackson.databind.ObjectMapper that serializes any Java
@@ -35,19 +32,22 @@ public class MyEncoder implements Encoder.Text<Map<String, Object>>,
 		mapper = new ObjectMapper();
 	}
 
+	/*
+	 * Not implemented .
+	 * 
+	 * @see javax.net.websocket.Decoder.Text#decode(java.lang.String)
+	 */
 	@Override
-	public Map<String, Object> decode(String s) throws DecodeException {
+	public Volume decode(String s) throws DecodeException {
 		// temporary workaround for a web socket implementation issue
 		Thread.currentThread().setContextClassLoader(
 				getClass().getClassLoader());
 
-		System.out.println("decode..........");
-		Map<String, Object> obj = new HashMap<String, Object>();
-		return obj;
+		throw new DecodeException("", "Decode Not implemented");
 	}
 
 	@Override
-	public String encode(Map<String, Object> resp) throws EncodeException {
+	public String encode(Volume resp) throws EncodeException {
 		Thread.currentThread().setContextClassLoader(
 				getClass().getClassLoader());
 

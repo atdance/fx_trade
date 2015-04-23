@@ -3,12 +3,11 @@
  */
 package test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -25,6 +24,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.MyMath;
+import common.Volume;
 
 import front.restapi.JSONTradeMessage;
 
@@ -35,8 +35,9 @@ import front.restapi.JSONTradeMessage;
 public class TestREST {
 
 	private final String URL_BASE = "http://localhost:8080/restapi/rest";
-
-	public static Client client = null;
+	private ObjectMapper mapper = null;
+	private String tradeAsJson = null;
+	private Client client = null;
 
 	JSONTradeMessage trade = new JSONTradeMessage("1415515", "EUR", "GBP",
 			new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10, MyMath.MC),
@@ -48,6 +49,8 @@ public class TestREST {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientBuilder.newClient();
+		mapper = new ObjectMapper();
+		tradeAsJson = mapper.writeValueAsString(trade);
 	}
 
 	@Test
@@ -55,10 +58,11 @@ public class TestREST {
 		final String url = URL_BASE + "/trade/gettest?tradeid=1";
 		client = ClientBuilder.newClient();
 		WebTarget target = client.target(url);
-		Response response = target.request().accept(MediaType.APPLICATION_JSON)
-				.get();
+		Response response = target.request().get();
+		// target.request().accept(MediaType.APPLICATION_JSON).get();
 		common.TradeMessage localtrade = response
 				.readEntity(common.TradeMessage.class);
+		assertEquals(200, response.getStatus());
 		assertNotNull(localtrade);
 		assertNotNull(localtrade.amountBuy);
 		assertTrue(localtrade.amountBuy.compareTo(BigDecimal.ZERO) > 0);
@@ -72,23 +76,16 @@ public class TestREST {
 	public void canPOST() throws Exception {
 		WebTarget target = client.target(URL_BASE).path("/trade/add");
 
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(trade);
 		int OPS = 1000;
 		int successfulOps = 0;
 
 		for (int i = 0; i < OPS; i++) {
-			Invocation.Builder invocationBuilder = target
-					.request(MediaType.APPLICATION_JSON);
-
-			Response response = invocationBuilder.post(Entity.entity(json,
-					MediaType.APPLICATION_JSON));
+			Response response = doPost(target);
 
 			if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 				successfulOps++;
 			} else {
 				String taskResponse = response.readEntity(String.class);
-				System.out.println(taskResponse);
 			}
 			response.close();
 		}
@@ -96,29 +93,52 @@ public class TestREST {
 		Assert.assertEquals(OPS, successfulOps);
 	}
 
+	private Response doPost(WebTarget target) {
+		Invocation.Builder invocationBuilder = target
+				.request(MediaType.APPLICATION_JSON);
+
+		Response response = invocationBuilder.post(Entity.entity(tradeAsJson,
+				MediaType.APPLICATION_JSON));
+		return response;
+	}
+
+	/**
+	 * precondition is that some data is in storage, so we make a POSt first
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void canGET_Currency_VOLUME() throws Exception {
 		final String url = URL_BASE + "/trade/volume";
 		client = ClientBuilder.newClient();
 		WebTarget target = client.target(url);
-		int OPS = 1000;
+		final int OPS = 30;
 		int successfulOps = 0;
 
+		WebTarget post = client.target(URL_BASE).path("/trade/add");
+		doPost(post);
+
 		for (int i = 0; i < OPS; i++) {
-			Response response = target.request()
-					.accept(MediaType.APPLICATION_JSON).get();
 
-			Map<String, Object> obj = new HashMap<String, Object>();
+			Response response = target.request().get();
+			// target.request().accept(MediaType.APPLICATION_JSON).get();
 
-			Map<String, Object> volume = response.readEntity(obj.getClass());
+			String msg = response.readEntity(String.class);
 
-			System.out.println("::" + volume.get("eur").toString());
+			ObjectMapper mapper = new ObjectMapper();
+			Volume volume = mapper.readValue(msg, Volume.class);
 
+			assertNotNull(volume);
+			assertTrue(volume.get("eur").compareTo(BigDecimal.ZERO) > 0);
+
+			/*
+			 * do not use assertEquals(200, response.getStatus() because we save
+			 * the results instead.
+			 */
 			if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 				successfulOps++;
 			} else {
 				String taskResponse = response.readEntity(String.class);
-				System.out.println(taskResponse);
 			}
 			response.close();
 		}

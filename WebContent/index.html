@@ -73,7 +73,7 @@ function connect() {
         log('Info: WebSocket connection opened.');
     };
     ws.onmessage = function (event) {
-        log('Received: ' + event.data);       
+        log('Received: ' + event.data);   
         globaldata = JSON.parse(event.data);
     };
     ws.onclose = function (event) {

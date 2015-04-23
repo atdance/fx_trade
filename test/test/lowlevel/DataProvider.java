@@ -2,7 +2,6 @@ package test.lowlevel;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +15,7 @@ import org.glassfish.jersey.media.sse.SseBroadcaster;
 import services.Services;
 
 import common.TradeMessage;
+import common.Volume;
 
 /**
  * First tests with websocket. Simple in-memory data storage for the
@@ -31,7 +31,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	private static final MultivaluedHashMap<Integer, Session> webSockets = new MultivaluedHashMap<>();
 
 	synchronized boolean addL(int xId) {
-		Map<String, Object> X = getVolume();
+		Volume X = getVolume();
 		if (X != null) {
 			// if (X.list == null) {
 			// X.list = new ArrayList<>();
@@ -67,7 +67,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 */
 	synchronized void addWebSocket(int xId, Session session) {
 		webSockets.add(xId, session);
-		Map<String, Object> X = getVolume();
+		Volume X = getVolume();
 		if (X != null) {
 			try {
 				session.getRemote().sendObject(X);
@@ -105,7 +105,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 *            obj that was added to the X or {@link objCoding#obj_CLEAR_ALL}
 	 *            if the X was cleared (i.e. all list were deleted).
 	 */
-	private static void wsBroadcast(int xId, Map<String, Object> DR) {
+	private static void wsBroadcast(int xId, Volume DR) {
 		List<Session> sessions = webSockets.get(xId);
 		if (sessions != null) {
 			for (Session session : sessions) {
@@ -122,7 +122,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	/**
 	 * @return
 	 */
-	private Map<String, Object> getVolume() {
+	private Volume getVolume() {
 		return vMapper.volume();
 	}
 

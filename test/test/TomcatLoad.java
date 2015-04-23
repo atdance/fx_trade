@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -51,7 +52,6 @@ public class TomcatLoad {
 		}
 		Assert.assertNull("Exception happened ", exception);
 		Assert.assertNull("Exception happened ", commonException);
-		System.out.println(commonException);
 	}
 
 	/**
@@ -63,6 +63,7 @@ public class TomcatLoad {
 
 	class UrlReaderTask implements Runnable {
 		private final String endpoint;
+		private final int THRESHOLD = 500;
 
 		public UrlReaderTask(String s) {
 			endpoint = s;
@@ -78,6 +79,9 @@ public class TomcatLoad {
 		}
 
 		public void actuallyrun() throws Exception {
+			if (ThreadLocalRandom.current().nextInt(1000) > THRESHOLD) {
+				Thread.yield();
+			}
 			try (BufferedReader in = new BufferedReader(new InputStreamReader(
 					new URL(endpoint).openStream()));) {
 				String inputLine;

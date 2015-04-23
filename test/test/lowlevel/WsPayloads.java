@@ -1,14 +1,5 @@
 package test.lowlevel;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.stream.JsonGenerator;
 import javax.websocket.EncodeException;
 
 import org.slf4j.Logger;
@@ -18,7 +9,6 @@ import storage.CurrencyMarket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import common.Currencies;
 import front.websocket.MyEncoder;
 
 /**
@@ -85,49 +75,6 @@ public class WsPayloads {
 
 		// temporary workaround for a web socket implementation issue
 
-		if (false) {
-			// Message message = new Message();
-			s = Json.createObjectBuilder().add("eur", 2000).add("gbp", 1000)
-					.build().toString();
-			// response = message.toString();
-			// StringWriter writer = new StringWriter();
-			// Json.createGenerator(writer).writeStartObject().write("eur",
-			// 2000)
-			// .write("gbp", 1000).writeEnd().flush();
-			// s = writer.toString();
-		}
-
-		if (false) {
-			LinkedHashMap<String, Object> ramo = new LinkedHashMap<String, Object>();
-			ramo.put(Currencies.EUR.name().toLowerCase(), 2000);
-			ramo.put(Currencies.GBP.name().toLowerCase(), 1000);
-
-			List<Map<String, Object>> lst = new ArrayList<Map<String, Object>>();
-			lst.add(ramo);
-
-			s = "{'eur':2000,'gbp':1000}";
-		}
-
-		if (false) {
-			StringWriter result = new StringWriter();
-			try (JsonGenerator gen = Json.createGenerator(result)) {
-				gen.writeStartObject().write("eur", 2000).write("gbp", 1000)
-						.writeEnd();
-				// gen.writeStartObject().write("3000").writeEnd();
-			}
-			s = result.toString();
-		}
-
-		if (false) {
-			JsonObject jsonObject = Json.createObjectBuilder().add("eur", 2000)
-					.add("gbp", 1000).build();
-			s = jsonObject.toString();
-		}
-		// try {
-		// s = serializer.writeValueAsString(resp);
-		// } catch (JsonProcessingException e) {
-		// e.printStackTrace();
-		// }
 		return s;
 	}
 }

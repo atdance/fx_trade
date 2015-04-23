@@ -5,7 +5,6 @@ package services;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import storage.CurrencyMarket;
 
 import common.Exchange;
 import common.TradeMessage;
+import common.Volume;
 
 /**
  * @param <T>
@@ -29,7 +29,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see services.OperationsInterface#insert(java.lang.Object)
 	 */
 	@Override
@@ -41,7 +41,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see services.OperationsInterface#insertLatest(java.lang.Object)
 	 */
 	@Override
@@ -53,7 +53,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see services.OperationsInterface#selectById(long)
 	 */
 	@Override
@@ -63,7 +63,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see services.OperationsInterface#selectAll()
 	 */
 	@Override
@@ -79,12 +79,12 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see services.OperationsInterface#listLatest()
 	 */
 	@Override
-	public Map<String, Object> volume() {
-		Map<String, Object> resp = null;
+	public Volume volume() {
+		Volume resp = null;
 		try {
 			resp = CurrencyMarket.getInstance().volume();
 		} catch (Exception ex) {

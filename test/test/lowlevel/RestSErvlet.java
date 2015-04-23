@@ -13,7 +13,9 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.server.JSONP;
 
 import services.TradeServices;
+
 import common.TradeMessage;
+
 import front.restapi.APICommon;
 
 /**
@@ -57,9 +59,7 @@ public class RestSErvlet extends APICommon {
 		try {
 			return resp;
 		} catch (Exception ex) {
-			System.out.println("TradeApi exchange...");
 			ex.printStackTrace();
-			System.out.println(ex);
 		}
 		return resp;
 	}

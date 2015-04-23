@@ -5,9 +5,7 @@ package storage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -18,6 +16,7 @@ import common.Currencies;
 import common.Exchange;
 import common.MyMath;
 import common.TradeMessage;
+import common.Volume;
 
 /**
  * Contains information about the market constituted by two currencies. Thread
@@ -29,7 +28,7 @@ final public class CurrencyMarket {
 	/**
 	 * used for caching the latest incoming data
 	 */
-	private Map<String, Object> cachedVolume = null;
+	private Volume cachedVolume = new Volume();
 
 	private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 	private final Lock readLock = rwl.readLock();
@@ -60,6 +59,8 @@ final public class CurrencyMarket {
 	}
 
 	private CurrencyMarket() {
+		cachedVolume.put(Currencies.EUR.name().toLowerCase(), BigDecimal.ZERO);
+		cachedVolume.put(Currencies.GBP.name().toLowerCase(), BigDecimal.ZERO);
 	}
 
 	public static synchronized CurrencyMarket getInstance() {
@@ -89,12 +90,11 @@ final public class CurrencyMarket {
 
 			cachedVolume = null;
 
-			cachedVolume = new LinkedHashMap<String, Object>();
+			cachedVolume = new Volume();
 			cachedVolume.put(Currencies.EUR.name().toLowerCase(),
-					currency1VolumeTotal.intValue());
+					currency1VolumeTotal);
 			cachedVolume.put(Currencies.GBP.name().toLowerCase(),
-					currency2VolumeTotal.intValue());
-
+					currency2VolumeTotal);
 		} finally {
 			writeLock.unlock();
 		}
@@ -126,14 +126,13 @@ final public class CurrencyMarket {
 	}
 
 	/**
-	 * List the total of handled volume of two currencies .
 	 *
-	 * @return
+	 * @return the total of handled volume of two currencies .
 	 */
-	public Map<String, Object> volume() {
+	public Volume volume() {
 		readLock.lock();
 
-		Map<String, Object> res = null;
+		Volume res = null;
 
 		try {
 
@@ -144,11 +143,11 @@ final public class CurrencyMarket {
 				LOG.info(" not from cache,cur1 "
 						+ currency1VolumeTotal.intValue());
 
-				res = new LinkedHashMap<String, Object>();
+				res = new Volume();
 				res.put(Currencies.EUR.name().toLowerCase(),
-						currency1VolumeTotal.intValue());
+						currency1VolumeTotal);
 				res.put(Currencies.GBP.name().toLowerCase(),
-						currency2VolumeTotal.intValue());
+						currency2VolumeTotal);
 			}
 		} finally {
 			readLock.unlock();

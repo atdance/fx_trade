@@ -89,9 +89,6 @@ public class RestConcurrencyTest {
 	@After
 	public void tearDown() throws Exception {
 		try {
-			System.out.println(" successfulOps " + successfulOps.intValue()
-					+ " vs " + (maxThreadCount * loopsCount));
-
 			Assert.assertEquals(successfulOps.intValue(),
 					(maxThreadCount * loopsCount));
 
@@ -146,7 +143,6 @@ class POSTTask implements Runnable {
 	public void run() {
 		try {
 			actuallyrun();
-
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
@@ -171,7 +167,7 @@ class POSTTask implements Runnable {
 				RestConcurrencyTest.successfulOps.addAndGet(1);
 			} else {
 				String taskResponse = response.readEntity(String.class);
-				System.out.println(taskResponse);
+
 			}
 		}
 	}

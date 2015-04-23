@@ -122,7 +122,7 @@ public class TradeAPI extends APICommon {
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
 	public Response writeTrade(@Context HttpServletRequest request,
 			final JSONTradeMessage pJSONmsg) {
-		LOG.info("PUT ");
+		LOG.info(" " + pJSONmsg);
 		Response res = null;
 		try {
 			TradeMessage msg = new TradeMessage(pJSONmsg);

@@ -2,7 +2,6 @@ package front.websocket;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.websocket.EncodeException;
@@ -16,7 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import storage.CurrencyMarket;
+
 import common.MyTime;
+import common.Volume;
+
 import front.restapi.TradeAPI;
 
 /**
@@ -24,7 +26,7 @@ import front.restapi.TradeAPI;
 @ServerEndpoint(value = "/websocket/WsAnnotation", encoders = { front.websocket.MyEncoder.class })
 public class WsAnnotation {
 
-	Map<String, Object> currencyVolume = null;
+	Volume currencyVolume = null;
 
 	CurrencyMarket mkt = storage.CurrencyMarket.getInstance();
 
@@ -86,8 +88,7 @@ public class WsAnnotation {
 	public static void sendAll() {
 		MyTime timer = new MyTime();
 		synchronized (sessions) {
-			Map<String, Object> volume = storage.CurrencyMarket.getInstance()
-					.volume();
+			Volume volume = storage.CurrencyMarket.getInstance().volume();
 			for (Session session : sessions) {
 				if (session.isOpen()) {
 					session.getAsyncRemote().sendObject(volume);

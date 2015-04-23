@@ -1,7 +1,6 @@
 package services;
 
 import java.util.List;
-import java.util.Map;
 
 import common.Exchange;
 import common.TradeMessage;
@@ -25,5 +24,5 @@ public interface OperationsInterface {
 
 	public abstract List<Exchange> selectAll();
 
-	public abstract Map<String, Object> volume();
+	public abstract common.Volume volume();
 }
