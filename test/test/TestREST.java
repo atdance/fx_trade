@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import javax.ws.rs.client.Client;
@@ -24,6 +25,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.MyMath;
+import common.TradeMessage;
 import common.Volume;
 
 import front.restapi.JSONTradeMessage;
@@ -34,7 +36,6 @@ import front.restapi.JSONTradeMessage;
  */
 public class TestREST {
 
-	private final String URL_BASE = "http://localhost:8080/restapi/rest";
 	private ObjectMapper mapper = null;
 	private String tradeAsJson = null;
 	private Client client = null;
@@ -55,13 +56,24 @@ public class TestREST {
 
 	@Test
 	public void canGET() {
-		final String url = URL_BASE + "/trade/gettest?tradeid=1";
+		final String url = Common.URL_BASE + "/trade/gettest?tradeid=1";
 		client = ClientBuilder.newClient();
 		WebTarget target = client.target(url);
-		Response response = target.request().get();
-		// target.request().accept(MediaType.APPLICATION_JSON).get();
-		common.TradeMessage localtrade = response
-				.readEntity(common.TradeMessage.class);
+		Response response =
+		// target.request().get();
+		target.request().accept(MediaType.APPLICATION_JSON).get();
+
+		String msg = response.readEntity(String.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		TradeMessage localtrade = null;
+		try {
+			localtrade = mapper.readValue(msg, TradeMessage.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		assertEquals(200, response.getStatus());
 		assertNotNull(localtrade);
 		assertNotNull(localtrade.amountBuy);
@@ -74,7 +86,7 @@ public class TestREST {
 
 	@Test
 	public void canPOST() throws Exception {
-		WebTarget target = client.target(URL_BASE).path("/trade/add");
+		WebTarget target = client.target(Common.URL_BASE).path("/trade/add");
 
 		int OPS = 1000;
 		int successfulOps = 0;
@@ -109,14 +121,15 @@ public class TestREST {
 	 */
 	@Test
 	public void canGET_Currency_VOLUME() throws Exception {
-		final String url = URL_BASE + "/trade/volume";
+
+		WebTarget post = client.target(Common.URL_BASE).path("/trade/add");
+		doPost(post);
+
+		final String url = Common.URL_BASE + "/trade/volume";
 		client = ClientBuilder.newClient();
 		WebTarget target = client.target(url);
 		final int OPS = 30;
 		int successfulOps = 0;
-
-		WebTarget post = client.target(URL_BASE).path("/trade/add");
-		doPost(post);
 
 		for (int i = 0; i < OPS; i++) {
 

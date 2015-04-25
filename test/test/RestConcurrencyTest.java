@@ -42,8 +42,8 @@ public class RestConcurrencyTest {
 
 	static final int loopsCount = 10;
 
-	private final static String URL_BASE = "http://localhost:8080/restapi/rest";
-	private static String URL_PUT = URL_BASE + "/trade/add";
+	// private final String URL_BASE = "http://localhost:8080/restapi/rest";
+	private final String URL_PUT = Common.URL_BASE + "/trade/add";
 
 	static JSONTradeMessage trade = new JSONTradeMessage("333", "EUR", "GBP",
 			new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10, MyMath.MC),

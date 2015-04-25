@@ -21,9 +21,6 @@ import org.junit.Test;
  *
  */
 public class TomcatLoad {
-	private static String URL = "http://localhost:8080/restapi/rest/trade/gettest?tradeid=1";
-
-	private static String BAD_URL = "http://localhost:8080/restapi/rest/trade/axxaxaag";
 	public static final int maxThreadCount = 600;
 	ExecutorService pool = null;
 
@@ -42,7 +39,7 @@ public class TomcatLoad {
 		Exception exception = null;
 
 		for (int i = 0; i < maxThreadCount; i++) {
-			pool.submit(new UrlReaderTask(URL));
+			pool.submit(new UrlReaderTask(Common.URL));
 		}
 		try {
 			pool.awaitTermination(5, TimeUnit.SECONDS);
