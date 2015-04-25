@@ -1,4 +1,3 @@
-local
 # fx_trade
 ##FX Market Trade Processor
 
