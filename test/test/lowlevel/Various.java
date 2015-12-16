@@ -14,6 +14,8 @@ import java.util.Random;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import common.MyTime;
 
@@ -22,6 +24,7 @@ import common.MyTime;
  *
  */
 public class Various {
+	Logger LOG = LoggerFactory.getLogger(Various.class);
 	final public static ThreadLocal<Random> threadLocalRandom = new ThreadLocal<Random>() {
 		@Override
 		protected Random initialValue() {
@@ -54,14 +57,13 @@ public class Various {
 			countries.put(l.getDisplayCountry(), iso);
 		}
 
-		// System.out.println(countries.get("Switzerland"));
+		// LOG.info(countries.get("Switzerland"));
 
 		try {
 			Date date = formatter.parse("24-JAN-15 10:27:44");
-			System.out.println(date.toString());
+			LOG.info(date.toString());
 
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -89,7 +91,7 @@ public class Various {
 			r.nextInt(100);
 		}
 
-		System.out.println(timer);
+		LOG.info(timer.toString());
 
 	}
 
