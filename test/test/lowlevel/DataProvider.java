@@ -2,8 +2,6 @@ package test.lowlevel;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.websocket.EncodeException;
 import javax.net.websocket.Session;
@@ -11,6 +9,8 @@ import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.glassfish.jersey.media.sse.EventChannel;
 import org.glassfish.jersey.media.sse.SseBroadcaster;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import services.Services;
 
@@ -24,11 +24,14 @@ import common.Volume;
 public class DataProvider<PAYLOAD extends TradeMessage> extends
 		Services<PAYLOAD> {
 
+	static Logger logger = LoggerFactory.getLogger(DataProvider.class);
+
 	/** Broadcaster for server-sent events. */
 	private static SseBroadcaster sseBroadcaster = new SseBroadcaster();
 
 	/** Map that stores web socket sessions corresponding to a given X ID. */
-	private static final MultivaluedHashMap<Integer, Session> webSockets = new MultivaluedHashMap<>();
+	@SuppressWarnings("rawtypes")
+	private static final MultivaluedHashMap<Integer, Session> webSockets = new MultivaluedHashMap<Integer, Session>();
 
 	synchronized boolean addL(int xId) {
 		Volume X = getVolume();
@@ -65,15 +68,15 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 * @param session
 	 *            New web socket session to be registered.
 	 */
-	synchronized void addWebSocket(int xId, Session session) {
+	@SuppressWarnings("unchecked")
+	synchronized void addWebSocket(int xId, Session<?> session) {
 		webSockets.add(xId, session);
 		Volume X = getVolume();
 		if (X != null) {
 			try {
 				session.getRemote().sendObject(X);
 			} catch (IOException | EncodeException ex) {
-				Logger.getLogger(DataProvider.class.getName()).log(
-						Level.SEVERE, null, ex);
+				logger.error(ex.getMessage());
 			}
 		}
 	}
@@ -88,7 +91,8 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 * @param session
 	 *            Web socket session to be removed.
 	 */
-	static synchronized void removeWebSocket(int xId, Session session) {
+	static synchronized void removeWebSocket(int xId, Session<?> session) {
+		@SuppressWarnings("rawtypes")
 		List<Session> sessions = webSockets.get(xId);
 		if (sessions != null) {
 			sessions.remove(session);
@@ -105,6 +109,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 *            obj that was added to the X or {@link objCoding#obj_CLEAR_ALL}
 	 *            if the X was cleared (i.e. all list were deleted).
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static void wsBroadcast(int xId, Volume DR) {
 		List<Session> sessions = webSockets.get(xId);
 		if (sessions != null) {
@@ -112,8 +117,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 				try {
 					session.getRemote().sendObject(DR);
 				} catch (IOException | EncodeException ex) {
-					Logger.getLogger(DataProvider.class.getName()).log(
-							Level.SEVERE, null, ex);
+					logger.error(ex.getStackTrace().toString());
 				}
 			}
 		}

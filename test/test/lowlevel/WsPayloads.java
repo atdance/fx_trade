@@ -2,14 +2,9 @@ package test.lowlevel;
 
 import javax.websocket.EncodeException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import storage.CurrencyMarket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import front.websocket.MyEncoder;
 
 /**
  * Experiments with Encoder which encodes the object data into messages which
@@ -23,17 +18,14 @@ public class WsPayloads {
 	 */
 	protected static ObjectMapper mapper = null;
 
-	private static Logger LOG = null;
-
 	static {
-		LOG = LoggerFactory.getLogger(MyEncoder.class);
 		mapper = new ObjectMapper();
 	}
 
 	boolean on = true;
 	int i = 0;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unused" })
 	public String encode(Object resp) throws EncodeException {
 
 		String s = "";

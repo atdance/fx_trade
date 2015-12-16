@@ -29,7 +29,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see services.OperationsInterface#insert(java.lang.Object)
 	 */
 	@Override
@@ -41,19 +41,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see services.OperationsInterface#insertLatest(java.lang.Object)
-	 */
-	@Override
-	public Long insertLatest(TradeMessage record) {
-		Exchange exc = record.getExchange();
-		CurrencyMarket.getInstance().addLatest(exc);
-		return 0L;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see services.OperationsInterface#selectById(long)
 	 */
 	@Override
@@ -63,7 +51,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see services.OperationsInterface#selectAll()
 	 */
 	@Override
@@ -79,7 +67,7 @@ public class TradeMapper implements OperationsInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see services.OperationsInterface#listLatest()
 	 */
 	@Override

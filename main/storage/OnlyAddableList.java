@@ -9,10 +9,12 @@ import java.util.List;
 
 /**
  * not thread safe list where elements can only be added and not removed
+ * 
+ * @param <K>
  *
  *
  */
-public class OnlyAddableList<T> implements Iterable {
+public class OnlyAddableList<T> implements Iterable<T> {
 	private final List<T> list;
 
 	public OnlyAddableList() {

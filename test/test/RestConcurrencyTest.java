@@ -3,7 +3,13 @@
  */
 package test;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -28,6 +34,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.MyMath;
+import common.Volume;
 
 import front.filter.RateLimiter;
 import front.restapi.JSONTradeMessage;
@@ -38,20 +45,14 @@ import front.restapi.JSONTradeMessage;
  */
 public class RestConcurrencyTest {
 	static final AtomicInteger successfulOps = new AtomicInteger(0);
-	static final int maxThreadCount = 100;
+	static final int maxThreadCount = 50;
 
-	static final int loopsCount = 10;
-
-	// private final String URL_BASE = "http://localhost:8080/restapi/rest";
-	private final String URL_PUT = Common.URL_BASE + "/trade/add";
+	final static String URL_PUT = Common.URL_BASE + "/trade/add";
+	final static String URL_GET_VOLUME = Common.URL_BASE + "/trade/volume";
 
 	static JSONTradeMessage trade = new JSONTradeMessage("333", "EUR", "GBP",
 			new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10, MyMath.MC),
 			new BigDecimal(0.7471, MyMath.MC), "21-APR-15 10:27:44", "FR");
-
-	private Client client = null;
-	private WebTarget target = null;
-	private ExecutorService pool = null;
 
 	/**
 	 * @throws java.lang.Exception
@@ -60,9 +61,6 @@ public class RestConcurrencyTest {
 	public void setUp() throws Exception {
 		try {
 			RateLimiter.disable();
-			client = ClientBuilder.newClient();
-			target = client.target(URL_PUT);
-			pool = Executors.newCachedThreadPool();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,12 +68,10 @@ public class RestConcurrencyTest {
 
 	@Test
 	public void test() {
-		pool = Executors.newCachedThreadPool();
-
-		RateLimiter.disable();
+		ExecutorService pool = Executors.newCachedThreadPool();
 
 		try {
-			time(pool, 100, new POSTTask(target));
+			timePost(pool, maxThreadCount);
 			pool.awaitTermination(3, TimeUnit.SECONDS);
 			pool.shutdown();
 		} catch (Exception e) {
@@ -89,39 +85,38 @@ public class RestConcurrencyTest {
 	@After
 	public void tearDown() throws Exception {
 		try {
-			Assert.assertEquals(successfulOps.intValue(),
-					(maxThreadCount * loopsCount));
+			Assert.assertEquals(successfulOps.intValue(), (maxThreadCount));
 
 			successfulOps.set(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			RateLimiter.enable();
-			client.close();
+			// client.close();
 		}
 	}
 
-	public static long time(Executor executor, int concurrency,
-			final Runnable action) throws InterruptedException {
+	public static long timePost(Executor executor, int concurrency)
+			throws InterruptedException {
 		final CountDownLatch ready = new CountDownLatch(concurrency);
 		final CountDownLatch start = new CountDownLatch(1);
 		final CountDownLatch done = new CountDownLatch(concurrency);
+
+		List<MyTask> tasks = new ArrayList<MyTask>();
+
+		final int MAX = 40;
+
 		for (int i = 0; i < concurrency; i++) {
-			executor.execute(new Runnable() {
-				@Override
-				public void run() {
-					ready.countDown(); // Tell timer we're ready
-					try {
-						start.await(); // Wait till peers are ready
-						action.run();
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-					} finally {
-						done.countDown(); // Tell timer we're done
-					}
-				}
-			});
+			if (i < MAX) {
+				tasks.add(new PostTask(ready, start, done));
+			} else {
+				tasks.add(new GetTask(ready, start, done));
+			}
 		}
+		for (MyTask myTask : tasks) {
+			executor.execute(myTask);
+		}
+
 		ready.await(); // Wait for all workers to be ready
 		long startNanos = System.nanoTime();
 		start.countDown(); // And they're off!
@@ -130,30 +125,112 @@ public class RestConcurrencyTest {
 	}
 }
 
-class POSTTask implements Runnable {
-	private WebTarget target = null;
+abstract class MyTask implements Runnable {
 	int THRESHOLD = 500;
-	int LOOP = 10;
+	private final CountDownLatch aReady;
+	private final CountDownLatch aStart;
+	private final CountDownLatch aDone;
 
-	public POSTTask(WebTarget pTarget) {
-		target = pTarget;
+	public MyTask(final CountDownLatch ready, final CountDownLatch start,
+			CountDownLatch done) {
+		aReady = ready;
+		aStart = start;
+		aDone = done;
 	}
 
 	@Override
 	public void run() {
+		aReady.countDown();
 		try {
+			aStart.await();
+
 			actuallyrun();
-		} catch (Exception e) {
-			System.out.println(e.toString());
+
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			aDone.countDown(); // Tell timer we're done
 		}
+
 	}
 
-	public void actuallyrun() throws JsonProcessingException {
-		for (int i = 0; i < LOOP; i++) {
+	public abstract void actuallyrun() throws JsonProcessingException,
+			IOException;
+}
 
-			if (ThreadLocalRandom.current().nextInt(1000) > THRESHOLD) {
-				Thread.yield();
+class GetTask extends MyTask {
+
+	public GetTask(/* WebTarget pTarget, */final CountDownLatch ready,
+			final CountDownLatch start, CountDownLatch done) {
+		super(ready, start, done);
+	}
+
+	@Override
+	public void actuallyrun() throws JsonProcessingException, IOException {
+		if (ThreadLocalRandom.current().nextInt(1000) > THRESHOLD) {
+			Thread.yield();
+		}
+		Client client = null;
+		try {
+			client = ClientBuilder.newClient();
+
+			WebTarget target = client
+					.target(RestConcurrencyTest.URL_GET_VOLUME);
+
+			Response response = target.request().get();
+			String msg = response.readEntity(String.class);
+			ObjectMapper mapper = new ObjectMapper();
+			Volume volume = mapper.readValue(msg, Volume.class);
+			assertNotNull(volume);
+			assertTrue(volume.get("eur").compareTo(BigDecimal.ZERO) > 0);
+
+			// String json =
+			// mapper.writeValueAsString(RestConcurrencyTest.trade);
+
+			// Invocation.Builder invocationBuilder = target
+			// .request(MediaType.APPLICATION_JSON);
+			// Response response = invocationBuilder.post(Entity.entity(json,
+			// MediaType.APPLICATION_JSON));
+
+			/*
+			 * do not use assertEquals(200, response.getStatus() because we save
+			 * the results instead.
+			 */
+			if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+				RestConcurrencyTest.successfulOps.addAndGet(1);
+			} else {
+				String taskResponse = response.readEntity(String.class);
 			}
+		} finally {
+			// response.close();
+			client.close();
+		}
+	}
+}
+
+class PostTask extends MyTask {
+	int THRESHOLD = 500;
+
+	public PostTask(/* WebTarget pTarget, */final CountDownLatch ready,
+			final CountDownLatch start, CountDownLatch done) {
+		super(ready, start, done);
+	}
+
+	@Override
+	public void actuallyrun() throws JsonProcessingException {
+		if (ThreadLocalRandom.current().nextInt(1000) > THRESHOLD) {
+			Thread.yield();
+		}
+		Client client = null;
+		try {
+			client = ClientBuilder.newClient();
+
+			WebTarget target = client.target(RestConcurrencyTest.URL_PUT);
 
 			ObjectMapper mapper = new ObjectMapper();
 			String json = mapper.writeValueAsString(RestConcurrencyTest.trade);
@@ -167,8 +244,10 @@ class POSTTask implements Runnable {
 				RestConcurrencyTest.successfulOps.addAndGet(1);
 			} else {
 				String taskResponse = response.readEntity(String.class);
-
 			}
+		} finally {
+			client.close();
 		}
+
 	}
 }

@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
  * TradeMessage
  */
 public class TradeMessageValidator {
-
 	private final static String dateFormat = "dd-MMM-yy hh:mm:ss";
 
 	private final java.util.List<String> COUNTRIES = Arrays.asList(Locale
@@ -53,25 +52,22 @@ public class TradeMessageValidator {
 	}
 
 	public void validate(TradeMessage pMsg) throws IllegalArgumentException {
-		checkArgString(pMsg.userId);
-		checkValidInputChars(pMsg.userId);
-		checkArgString(pMsg.currencyFrom);
-		checkArgString(pMsg.currencyTo);
-		checkArgString(pMsg.originatingCountry);
-
-		checkCurrency(pMsg.currencyFrom);
-		checkCurrency(pMsg.currencyTo);
-
-		checkAmount(pMsg.amountSell);
-		checkAmount(pMsg.amountBuy);
-
-		checkRate(pMsg.rate);
-
-		checkDateString(pMsg.timePlaced);
-
-		checkArgString(pMsg.originatingCountry);
-		checkCountry(pMsg.originatingCountry);
-	}
+		/*
+		 * checkArgString(pMsg.userId); checkValidInputChars(pMsg.userId);
+		 * checkArgString(pMsg.currencyFrom); checkArgString(pMsg.currencyTo);
+		 * checkArgString(pMsg.originatingCountry);
+		 *
+		 * checkCurrency(pMsg.currencyFrom); checkCurrency(pMsg.currencyTo);
+		 *
+		 * checkAmount(pMsg.amountSell); checkAmount(pMsg.amountBuy);
+		 *
+		 * checkRate(pMsg.rate);
+		 *
+		 * checkDateString(pMsg.timePlaced);
+		 *
+		 * checkArgString(pMsg.originatingCountry);
+		 * checkCountry(pMsg.originatingCountry);
+		 */}
 
 	void checkArgString(String pVal) throws IllegalArgumentException {
 		if (null == pVal || pVal.isEmpty() || pVal.length() < 1) {
@@ -135,6 +131,7 @@ public class TradeMessageValidator {
 
 	void checkDateString(String pVal) {
 		try {
+			@SuppressWarnings("unused")
 			Date date = new SimpleDateFormat(dateFormat, Locale.GERMAN)
 					.parse(pVal);
 		} catch (ParseException e) {

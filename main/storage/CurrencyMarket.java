@@ -4,7 +4,6 @@
 package storage;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -23,7 +22,17 @@ import common.Volume;
  * consistency implemented with a ReentrantReadWriteLock .
  *
  */
-final public class CurrencyMarket {
+public class CurrencyMarket {
+	private static CurrencyMarket instance = new CurrencyMarket();
+
+	public static CurrencyMarket getInstance() {
+		return instance;
+	}
+
+	// }
+
+	// final class Market {
+	// public static final Market instance = new Market();
 
 	/**
 	 * used for caching the latest incoming data
@@ -35,11 +44,6 @@ final public class CurrencyMarket {
 	private final Lock writeLock = rwl.writeLock();
 
 	private final OnlyAddableList<Exchange> exchanges = new OnlyAddableList<Exchange>();
-
-	private volatile static CurrencyMarket localInstance = null;
-
-	private static List<BigDecimal> cur1Buffer = new ArrayList<BigDecimal>(1000);
-	private static List<BigDecimal> cur2Buffer = new ArrayList<BigDecimal>(1000);
 
 	/**
 	 * Store the total of handled volume of one currency .
@@ -63,21 +67,27 @@ final public class CurrencyMarket {
 		cachedVolume.put(Currencies.GBP.name().toLowerCase(), BigDecimal.ZERO);
 	}
 
-	public static synchronized CurrencyMarket getInstance() {
-		CurrencyMarket tempInstance = localInstance;
+	// private volatile static CurrencyMarket localInstance = null;
 
-		if (tempInstance == null) {
-			synchronized (CurrencyMarket.class) {
-				tempInstance = localInstance;
-				if (tempInstance == null) {
-					tempInstance = new CurrencyMarket();
-					localInstance = tempInstance;
-				}
-			}
-		}
+	// private CurrencyMarket() {
+	// cachedVolume.put(Currencies.EUR.name().toLowerCase(), BigDecimal.ZERO);
+	// cachedVolume.put(Currencies.GBP.name().toLowerCase(), BigDecimal.ZERO);
+	// }
 
-		return tempInstance;
-	}
+	// public static synchronized CurrencyMarket getInstance() {
+	// CurrencyMarket tempInstance = localInstance;
+
+	// if (tempInstance == null) {
+	// synchronized (CurrencyMarket.class) {
+	// tempInstance = localInstance;
+	// if (tempInstance == null) {
+	// tempInstance = new CurrencyMarket();
+	// localInstance = tempInstance;
+	// }
+	// }
+	// }
+	// return tempInstance;
+	// }
 
 	public void add(Exchange obj) {
 		writeLock.lock();
@@ -95,18 +105,6 @@ final public class CurrencyMarket {
 					currency1VolumeTotal);
 			cachedVolume.put(Currencies.GBP.name().toLowerCase(),
 					currency2VolumeTotal);
-		} finally {
-			writeLock.unlock();
-		}
-	}
-
-	public void addLatest(Exchange obj) {
-		writeLock.lock();
-
-		try {
-			LOG.debug(" addlatest " + obj.amountBuy);
-			cur1Buffer.add(obj.amountBuy);
-			cur2Buffer.add(obj.amountSell);
 		} finally {
 			writeLock.unlock();
 		}

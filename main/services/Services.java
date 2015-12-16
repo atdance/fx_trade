@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import common.TradeMessage;
+
 import front.restapi.ApiGenericResponse;
 
 /**
@@ -67,9 +67,10 @@ public class Services<PAYLOAD extends TradeMessage> {
 		}
 
 		try {
-			vRes = Response.status(Status.OK)
-					.entity(serializer.writeValueAsString(vMapper.selectById(pID)))
-					.build();
+			vRes = Response
+					.status(Status.OK)
+					.entity(serializer.writeValueAsString(vMapper
+							.selectById(pID))).build();
 
 		} catch (final Exception ex) {
 			LOG.warn("", ex.getMessage());
@@ -99,7 +100,6 @@ public class Services<PAYLOAD extends TradeMessage> {
 			switch (pOpType) {
 			case ADD:
 				vMapper.insert(trade);
-				vMapper.insertLatest(trade);
 				break;
 			default:
 				throw new IllegalArgumentException(

@@ -18,8 +18,6 @@ public interface OperationsInterface {
 
 	public abstract Long insert(TradeMessage t);
 
-	public abstract Long insertLatest(TradeMessage t);
-
 	public abstract TradeMessage selectById(Long id);
 
 	public abstract List<Exchange> selectAll();

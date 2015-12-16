@@ -6,9 +6,6 @@ import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.Volume;
@@ -25,10 +22,7 @@ public class MyEncoder implements Encoder.Text<Volume>, Decoder.Text<Volume> {
 	 */
 	protected static ObjectMapper mapper = null;
 
-	private static Logger LOG = null;
-
 	static {
-		LOG = LoggerFactory.getLogger(MyEncoder.class);
 		mapper = new ObjectMapper();
 	}
 

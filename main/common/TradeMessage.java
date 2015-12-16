@@ -1,14 +1,9 @@
 package common;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Locale;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import front.restapi.JSONTradeMessage;
 
@@ -22,36 +17,35 @@ import front.restapi.JSONTradeMessage;
  *
  */
 public class TradeMessage {
-	private final String dateFormat = "dd-MMM-yy hh:mm:ss";
-	private final SimpleDateFormat formatter = new SimpleDateFormat(dateFormat,
-			Locale.GERMAN);
+	private final String userId;
+	private final String currencyFrom;
+	private final String currencyTo;
+	private final BigDecimal amountSell;// = new BigDecimal(0, MyMath.MC);
+	private final BigDecimal amountBuy;// = new BigDecimal(0, MyMath.MC);
+	private final BigDecimal rate;// = new BigDecimal(0, MyMath.MC);
+	private final String timePlaced;
+	private final String originatingCountry;
 
-	private final java.util.List<String> COUNTRIES = Arrays.asList(Locale
-			.getISOCountries());
-
-	private final BigDecimal HUNDRED = new BigDecimal(100, MyMath.MC);
-	private final BigDecimal MAX = new BigDecimal(99000000, MyMath.MC);
-
-	private final BigDecimal MAX_RATE = new BigDecimal(40000, MyMath.MC);
-
-	private final Logger LOG = LoggerFactory.getLogger(TradeMessage.class);
-
-	public String userId = null;
-	public String currencyFrom = null;
-	public String currencyTo = null;
-	public BigDecimal amountSell = new BigDecimal(0, MyMath.MC);
-	public BigDecimal amountBuy = new BigDecimal(0, MyMath.MC);
-	public BigDecimal rate = new BigDecimal(0, MyMath.MC);
-	public String timePlaced = null;
-	public String originatingCountry = null;
-
-	public CurrencyPair currencyPair = null;
-	public Exchange exchange;
+	private final CurrencyPair currencyPair;
+	private final Exchange exchange;
 
 	public TradeMessage() {
-		this.currencyPair = new CurrencyPair(currencyFrom, currencyTo);
-		this.exchange = new Exchange(currencyPair, amountSell, amountBuy);
+		userId = null;
+		currencyFrom = null;
+		currencyTo = null;
+		amountSell = null;// = new BigDecimal(0, MyMath.MC);
+		amountBuy = null;// = new BigDecimal(0, MyMath.MC);
+		rate = null;// = new BigDecimal(0, MyMath.MC);
+		timePlaced = null;
+		originatingCountry = null;
+		exchange = null;
+		currencyPair = null;
 	}
+
+	// public TradeMessage() {
+	// this.currencyPair = new CurrencyPair(currencyFrom, currencyTo);
+	// this.exchange = new Exchange(currencyPair, amountSell, amountBuy);
+	// }
 
 	public TradeMessage(String pUserId, String pCurrencyFrom,
 			String pCurrencyTo, BigDecimal pAmountSell, BigDecimal pAmountBuy,
@@ -61,8 +55,8 @@ public class TradeMessage {
 		this.userId = pUserId;
 		this.currencyFrom = pCurrencyFrom;
 		this.currencyTo = pCurrencyTo;
-		this.amountSell = pAmountSell;
 		this.amountBuy = pAmountBuy;
+		this.amountSell = pAmountSell;
 		this.rate = pRate;
 		this.timePlaced = pTimePlaced;
 		this.originatingCountry = pOriginCountry;
@@ -98,9 +92,16 @@ public class TradeMessage {
 	public String toString() {
 		return "TradeMessage [userId=" + userId + ", currencyFrom="
 				+ currencyFrom + ", currencyTo=" + currencyTo + ", amountSell="
-				+ amountSell + ", amountBuy=" + amountBuy + ", rate=" + rate
-				+ ", timePlaced=" + timePlaced + ", originatingCountry="
+				+ amountSell + ", amountBuy=" + getAmountBuy() + ", rate="
+				+ rate + ", timePlaced=" + timePlaced + ", originatingCountry="
 				+ originatingCountry + "]";
+	}
+
+	/**
+	 * @return the amountBuy
+	 */
+	public BigDecimal getAmountBuy() {
+		return amountBuy;
 	}
 
 }

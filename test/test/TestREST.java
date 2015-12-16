@@ -22,6 +22,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.MyMath;
@@ -40,6 +42,8 @@ public class TestREST {
 	private String tradeAsJson = null;
 	private Client client = null;
 
+	Logger LOG = LoggerFactory.getLogger(TestREST.class);
+
 	JSONTradeMessage trade = new JSONTradeMessage("1415515", "EUR", "GBP",
 			new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10, MyMath.MC),
 			new BigDecimal(0.7471, MyMath.MC), "24-JAN-15 10:27:44", "FR");
@@ -54,41 +58,11 @@ public class TestREST {
 		tradeAsJson = mapper.writeValueAsString(trade);
 	}
 
-	@Test
-	public void canGET() {
-		final String url = Common.URL_BASE + "/trade/gettest?tradeid=1";
-		client = ClientBuilder.newClient();
-		WebTarget target = client.target(url);
-		Response response =
-		// target.request().get();
-		target.request().accept(MediaType.APPLICATION_JSON).get();
-
-		String msg = response.readEntity(String.class);
-
-		ObjectMapper mapper = new ObjectMapper();
-		TradeMessage localtrade = null;
-		try {
-			localtrade = mapper.readValue(msg, TradeMessage.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		assertEquals(200, response.getStatus());
-		assertNotNull(localtrade);
-		assertNotNull(localtrade.amountBuy);
-		assertTrue(localtrade.amountBuy.compareTo(BigDecimal.ZERO) > 0);
-
-		response.close();
-		client.close();
-
-	}
-
-	@Test
+	// @Test
 	public void canPOST() throws Exception {
 		WebTarget target = client.target(Common.URL_BASE).path("/trade/add");
 
-		int OPS = 1000;
+		int OPS = 1;
 		int successfulOps = 0;
 
 		for (int i = 0; i < OPS; i++) {
@@ -97,12 +71,52 @@ public class TestREST {
 			if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 				successfulOps++;
 			} else {
+				@SuppressWarnings("unused")
 				String taskResponse = response.readEntity(String.class);
 			}
 			response.close();
 		}
 
 		Assert.assertEquals(OPS, successfulOps);
+	}
+
+	@Test
+	public void canGET() {
+		final String url = Common.URL_BASE + "/trade/gettest?tradeid=1";
+
+		WebTarget target = client.target(url);
+		Response response =
+		// target.request().get();
+		target.request().accept(MediaType.TEXT_PLAIN).get();
+
+		String msg = response.readEntity(String.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		TradeMessage localtrade = null;
+
+		Exception exc = null;
+
+		try {
+			localtrade = mapper.readValue(msg, TradeMessage.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+			exc = e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			exc = e;
+		}
+		if (exc != null) {
+			LOG.info(exc);
+		}
+		assertTrue(exc == null);
+		assertEquals(200, response.getStatus());
+		assertNotNull(localtrade);
+		assertNotNull(localtrade.getAmountBuy());
+		assertTrue(localtrade.getAmountBuy().compareTo(BigDecimal.ZERO) > 0);
+
+		response.close();
+		client.close();
+
 	}
 
 	private Response doPost(WebTarget target) {
@@ -119,7 +133,7 @@ public class TestREST {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	// @Test
 	public void canGET_Currency_VOLUME() throws Exception {
 
 		WebTarget post = client.target(Common.URL_BASE).path("/trade/add");

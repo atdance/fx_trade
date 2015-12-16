@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SynteticDataProducer {
 	private static List<Map<String, Integer>> JSONObject = null;
 
+	@SuppressWarnings("unused")
 	private static List<Map<String, Object>> getJsonData() {
 		JSONObject = array();
 		JSONObject.add(leaf(0, rangeRand(0, 8)));
@@ -66,7 +67,7 @@ public class SynteticDataProducer {
 	}
 
 	private static Map<String, Integer> leaf(Integer x, Integer y) {
-		Map<String, Integer> leaf = new HashMap();
+		Map<String, Integer> leaf = new HashMap<String, Integer>();
 		leaf.put("x", x);
 		leaf.put("y", y);
 		return leaf;

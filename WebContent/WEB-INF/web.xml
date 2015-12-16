@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>Trade API</display-name>
   <servlet>
@@ -21,54 +22,56 @@
     <servlet-name>Jersey REST Service</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
-  
-  
-  
   <filter>
     <filter-name>RateLimiter</filter-name>
     <filter-class>
         front.filter.RateLimiter
     </filter-class>
-</filter>
-<filter-mapping>
+  </filter>
+  <filter-mapping>
     <filter-name>RateLimiter</filter-name>
     <url-pattern>/*</url-pattern>
-</filter-mapping>
-
-
-<filter>
-  <filter-name>CorsFilter</filter-name>
-  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-  <init-param>
-    <param-name>cors.allowed.origins</param-name>
-    <param-value>*</param-value>
-  </init-param>
-  <init-param>
-    <param-name>cors.allowed.methods</param-name>
-    <param-value>GET,POST,HEAD,OPTIONS,PUT</param-value>
-  </init-param>
-  <init-param>
-    <param-name>cors.allowed.headers</param-name>
-    <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
-  </init-param>
-  <init-param>
-    <param-name>cors.exposed.headers</param-name>
-    <param-value>Access-Control-Allow-Origin,Access-Control-Allow-Credentials</param-value>
-  </init-param>
-  <init-param>
-    <param-name>cors.support.credentials</param-name>
-    <param-value>true</param-value>
-  </init-param>
-  <init-param>
-    <param-name>cors.preflight.maxage</param-name>
-    <param-value>10</param-value>
-  </init-param>
-</filter>
-<filter-mapping>
-  <filter-name>CorsFilter</filter-name>
-  <url-pattern>/*</url-pattern>
-</filter-mapping>
-
-
-  
+  </filter-mapping>
+  <filter>
+    <filter-name>CorsFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+    <init-param>
+      <param-name>cors.allowed.origins</param-name>
+      <param-value>*</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.allowed.methods</param-name>
+      <param-value>GET,POST,HEAD,OPTIONS,PUT</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.allowed.headers</param-name>
+      <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.exposed.headers</param-name>
+      <param-value>Access-Control-Allow-Origin,Access-Control-Allow-Credentials</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.support.credentials</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cors.preflight.maxage</param-name>
+      <param-value>10</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>CorsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <description>JAX-RS Tools Generated - Do not modify</description>
+    <servlet-name>JAX-RS Servlet</servlet-name>
+    <servlet-class></servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JAX-RS Servlet</servlet-name>
+    <url-pattern>/jaxrs/*</url-pattern>
+  </servlet-mapping>
 </web-app>

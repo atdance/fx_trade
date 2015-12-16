@@ -39,6 +39,7 @@ public class TradeServices<PAYLOAD extends TradeMessage> extends
 	 *
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static synchronized TradeServices<? extends TradeMessage> getInstance(
 			Class<? extends TradeMessage> t) {
 		TradeServices<? extends TradeMessage> tempInstance = localInstance;

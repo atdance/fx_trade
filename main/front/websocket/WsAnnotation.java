@@ -11,6 +11,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+//import org.glassfish.tyrus.core.TyrusSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +94,24 @@ public class WsAnnotation {
 				if (session.isOpen()) {
 					session.getAsyncRemote().sendObject(volume);
 				}
+			}
+		}
+		LOG.info("elapsed " + timer.toString());
+	}
+
+	// @OnMessage
+	@SuppressWarnings("unused")
+	public static void sendAll2() {
+		Volume currencyVolume = storage.CurrencyMarket.getInstance().volume();
+
+		MyTime timer = new MyTime();
+		int max = 1;
+		int counter = 0;
+		for (Session session : sessions) {
+			if ((counter < max) && session.isOpen()) {
+				// ((TyrusSession)
+				// session).broadcast(currencyVolume.toString());
+				counter++;
 			}
 		}
 		LOG.info("elapsed " + timer.toString());
