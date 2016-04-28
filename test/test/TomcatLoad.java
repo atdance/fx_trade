@@ -4,33 +4,28 @@
 package test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author name
  *
  */
 public class TomcatLoad {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(TomcatLoad.class);
 	public static final int maxThreadCount = 600;
 	ExecutorService pool = null;
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		pool = Executors.newCachedThreadPool();
-	}
 
 	Exception commonException = null;
 
@@ -45,17 +40,11 @@ public class TomcatLoad {
 			pool.awaitTermination(5, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			exception = e;
-			e.printStackTrace();
+			LOGGER.warn(e.getMessage(), e);
+			Thread.currentThread().interrupt();
 		}
 		Assert.assertNull("Exception happened ", exception);
 		Assert.assertNull("Exception happened ", commonException);
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	class UrlReaderTask implements Runnable {
@@ -71,11 +60,12 @@ public class TomcatLoad {
 			try {
 				actuallyrun();
 			} catch (Exception e) {
+				LOGGER.warn(e.getMessage(), e);
 				commonException = e;
 			}
 		}
 
-		public void actuallyrun() throws Exception {
+		public void actuallyrun() throws IOException {
 			if (ThreadLocalRandom.current().nextInt(1000) > THRESHOLD) {
 				Thread.yield();
 			}
