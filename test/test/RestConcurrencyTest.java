@@ -151,7 +151,6 @@ abstract class MyTask implements Runnable {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			aDone.countDown(); // Tell timer we're done
@@ -165,8 +164,8 @@ abstract class MyTask implements Runnable {
 
 class GetTask extends MyTask {
 
-	public GetTask(/* WebTarget pTarget, */final CountDownLatch ready,
-			final CountDownLatch start, CountDownLatch done) {
+	public GetTask(final CountDownLatch ready, final CountDownLatch start,
+			CountDownLatch done) {
 		super(ready, start, done);
 	}
 
@@ -189,14 +188,6 @@ class GetTask extends MyTask {
 			assertNotNull(volume);
 			assertTrue(volume.get("eur").compareTo(BigDecimal.ZERO) > 0);
 
-			// String json =
-			// mapper.writeValueAsString(RestConcurrencyTest.trade);
-
-			// Invocation.Builder invocationBuilder = target
-			// .request(MediaType.APPLICATION_JSON);
-			// Response response = invocationBuilder.post(Entity.entity(json,
-			// MediaType.APPLICATION_JSON));
-
 			/*
 			 * do not use assertEquals(200, response.getStatus() because we save
 			 * the results instead.
@@ -204,10 +195,9 @@ class GetTask extends MyTask {
 			if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 				RestConcurrencyTest.successfulOps.addAndGet(1);
 			} else {
-				String taskResponse = response.readEntity(String.class);
+				response.readEntity(String.class);
 			}
 		} finally {
-			// response.close();
 			client.close();
 		}
 	}
@@ -216,8 +206,8 @@ class GetTask extends MyTask {
 class PostTask extends MyTask {
 	int THRESHOLD = 500;
 
-	public PostTask(/* WebTarget pTarget, */final CountDownLatch ready,
-			final CountDownLatch start, CountDownLatch done) {
+	public PostTask(final CountDownLatch ready, final CountDownLatch start,
+			CountDownLatch done) {
 		super(ready, start, done);
 	}
 
@@ -243,7 +233,7 @@ class PostTask extends MyTask {
 			if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 				RestConcurrencyTest.successfulOps.addAndGet(1);
 			} else {
-				String taskResponse = response.readEntity(String.class);
+				response.readEntity(String.class);
 			}
 		} finally {
 			client.close();
