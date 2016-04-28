@@ -81,6 +81,7 @@ public class TomcatLoad {
 			}
 			try (BufferedReader in = new BufferedReader(new InputStreamReader(
 					new URL(endpoint).openStream()));) {
+				@SuppressWarnings("unused")
 				String inputLine;
 				while ((inputLine = in.readLine()) != null) {
 					// NO OP;
