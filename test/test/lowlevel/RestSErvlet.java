@@ -31,7 +31,7 @@ public class RestSErvlet extends APICommon {
 	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
 	public Response readBeanJSONP(@Context HttpServletRequest request,
 			@QueryParam("tradeid") final Long pID) {
-		// LOG.info("GET nonJAX");
+		// LOGGER.info("GET nonJAX");
 		Response res = null;
 		try {
 			res = TradeServices.getInstance(TradeMessage.class).serviceGet(pID);
