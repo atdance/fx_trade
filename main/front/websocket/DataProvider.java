@@ -76,7 +76,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 			try {
 				session.getRemote().sendObject(X);
 			} catch (IOException | EncodeException ex) {
-				logger.error(ex.getMessage());
+				logger.error(ex.getMessage(), ex);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 				try {
 					session.getRemote().sendObject(DR);
 				} catch (IOException | EncodeException ex) {
-					logger.error(ex.getStackTrace().toString());
+					logger.error(ex.getStackTrace().toString(), ex);
 				}
 			}
 		}

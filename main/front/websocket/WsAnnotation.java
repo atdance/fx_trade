@@ -11,8 +11,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-//import org.glassfish.tyrus.core.TyrusSession;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import storage.CurrencyMarket;
@@ -21,6 +19,8 @@ import common.MyTime;
 import common.Volume;
 
 import front.restapi.TradeAPI;
+
+//import org.glassfish.tyrus.core.TyrusSession;
 
 /**
  */
@@ -33,7 +33,7 @@ public class WsAnnotation {
 
 	private static Set<Session> sessions = new HashSet<>();
 
-	static Logger LOG = null;
+	static org.slf4j.Logger LOG = null;
 
 	static {
 		LOG = LoggerFactory.getLogger(TradeAPI.class);
@@ -49,14 +49,15 @@ public class WsAnnotation {
 			if (session.isOpen()) {
 				session.getBasicRemote().sendObject(currencyVolume);
 			}
-		} catch (IOException e) {
+		} catch (IOException ex) {
+			LOG.error(ex.getMessage(), ex);
 			try {
 				session.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (IOException ex1) {
+				LOG.error(ex1.getMessage(), ex1);
 			}
-		} catch (EncodeException e) {
-			e.printStackTrace();
+		} catch (EncodeException ex) {
+			LOG.error(ex.getMessage(), ex);
 		}
 		LOG.info("elapsed " + timer.toString());
 	}
@@ -74,14 +75,15 @@ public class WsAnnotation {
 			if (session.isOpen()) {
 				session.getBasicRemote().sendObject(currencyVolume);
 			}
-		} catch (IOException e) {
+		} catch (IOException ex) {
+			LOG.error(ex.getMessage(), ex);
 			try {
 				session.close();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				LOG.error(e1.getMessage(), e1);
 			}
 		} catch (EncodeException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 		LOG.info("elapsed " + timer.toString());
 	}

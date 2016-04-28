@@ -60,6 +60,7 @@ public class TradeAPI extends APICommon {
 		try {
 			res = TradeServices.getInstance(TradeMessage.class).serviceGet(pID);
 		} catch (Exception ex) {
+			LOG.warn(ex.getMessage(), ex);
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return res;
@@ -83,6 +84,7 @@ public class TradeAPI extends APICommon {
 			}
 
 		} catch (Exception ex) {
+			LOG.warn(ex.getMessage(), ex);
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		LOG.info("elapsed " + timer.toString());
@@ -103,6 +105,7 @@ public class TradeAPI extends APICommon {
 			res = TradeServices.getInstance(TradeMessage.class).volume();
 			cacheGraph.add(res);
 		} catch (Exception ex) {
+			LOG.warn(ex.getMessage(), ex);
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return res;
@@ -134,6 +137,7 @@ public class TradeAPI extends APICommon {
 			front.websocket.WsAnnotation.sendAll();
 
 		} catch (IllegalArgumentException ex) {
+			LOG.warn(ex.getMessage(), ex);
 			String msg = ex.getMessage();
 			LOG.warn(msg);
 
@@ -141,7 +145,7 @@ public class TradeAPI extends APICommon {
 					.type(MediaType.TEXT_PLAIN).entity(msg).build();
 
 		} catch (Exception ex) {
-			LOG.warn(ex.getMessage());
+			LOG.warn(ex.getMessage(), ex);
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return res;

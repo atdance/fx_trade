@@ -58,7 +58,7 @@ public class RateLimiter implements Filter {
 
 		elapsedMillis = TimeUnit.NANOSECONDS.toMillis(now - before);
 
-		if (enabled & elapsedMillis < this.TIME_LIMIT_MILLIS) {
+		if (enabled && elapsedMillis < this.TIME_LIMIT_MILLIS) {
 			LOG.info("NOK  " + elapsedMillis + " vs " + TIME_LIMIT_MILLIS);
 			res.sendError(429);
 			res.addIntHeader("Retry/After", (int) TIME_LIMIT_MILLIS);
@@ -72,7 +72,7 @@ public class RateLimiter implements Filter {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see javax.servlet.Filter#destroy()
 	 */
 	@Override
@@ -81,7 +81,7 @@ public class RateLimiter implements Filter {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
 	@Override

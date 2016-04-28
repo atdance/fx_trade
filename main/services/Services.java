@@ -73,9 +73,8 @@ public class Services<PAYLOAD extends TradeMessage> {
 							.selectById(pID))).build();
 
 		} catch (final Exception ex) {
-			LOG.warn("", ex.getMessage());
+			LOG.warn(ex.getMessage(), ex);
 			vRes = Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		} finally {
 		}
 		return vRes;
 	}
@@ -115,7 +114,7 @@ public class Services<PAYLOAD extends TradeMessage> {
 			res = Response.status(Status.OK).entity(resString).build();
 		} catch (final Exception ex) {
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
-			LOG.warn("", ex.getMessage());
+			LOG.warn(ex.getMessage(), ex);
 		}
 		return res;
 	}

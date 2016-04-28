@@ -61,6 +61,7 @@ public class TradeMapper implements OperationsInterface {
 			resp = CurrencyMarket.getInstance().getAll();
 		} catch (Exception ex) {
 			resp = Collections.emptyList();
+			LOG.error(ex.getMessage(), ex);
 		}
 		return resp;
 	}
@@ -76,7 +77,7 @@ public class TradeMapper implements OperationsInterface {
 		try {
 			resp = CurrencyMarket.getInstance().volume();
 		} catch (Exception ex) {
-			LOG.error(ex.getMessage());
+			LOG.error(ex.getMessage(), ex);
 		}
 		return resp;
 	}

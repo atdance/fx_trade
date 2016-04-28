@@ -6,6 +6,9 @@ import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.Volume;
@@ -15,6 +18,9 @@ import common.Volume;
  * over the websocket connection.
  */
 public class MyEncoder implements Encoder.Text<Volume>, Decoder.Text<Volume> {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(MyEncoder.class);
 
 	/**
 	 * A com.fasterxml.jackson.databind.ObjectMapper that serializes any Java
@@ -50,8 +56,8 @@ public class MyEncoder implements Encoder.Text<Volume>, Decoder.Text<Volume> {
 		try {
 
 			s = mapper.writeValueAsString(resp);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+		} catch (JsonProcessingException ex) {
+			LOGGER.error(ex.getMessage(), ex);
 		}
 		return s;
 	}
