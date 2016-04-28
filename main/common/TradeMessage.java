@@ -2,9 +2,6 @@ package common;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import front.restapi.JSONTradeMessage;
 
 /**
@@ -78,14 +75,11 @@ public class TradeMessage {
 		return exchange;
 	}
 
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+	/**
+	 * @return the amountBuy
+	 */
+	public BigDecimal getAmountBuy() {
+		return amountBuy;
 	}
 
 	@Override
@@ -95,13 +89,6 @@ public class TradeMessage {
 				+ amountSell + ", amountBuy=" + getAmountBuy() + ", rate="
 				+ rate + ", timePlaced=" + timePlaced + ", originatingCountry="
 				+ originatingCountry + "]";
-	}
-
-	/**
-	 * @return the amountBuy
-	 */
-	public BigDecimal getAmountBuy() {
-		return amountBuy;
 	}
 
 }
