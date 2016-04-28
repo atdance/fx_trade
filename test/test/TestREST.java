@@ -42,7 +42,7 @@ public class TestREST {
 	private String tradeAsJson = null;
 	private Client client = null;
 
-	Logger LOG = LoggerFactory.getLogger(TestREST.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(TestREST.class);
 
 	JSONTradeMessage trade = new JSONTradeMessage("1415515", "EUR", "GBP",
 			new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10, MyMath.MC),
@@ -106,7 +106,7 @@ public class TestREST {
 			exc = e;
 		}
 		if (exc != null) {
-			LOG.info(exc);
+			LOGGER.info(exc.getCause() + "" + exc.getMessage());
 		}
 		assertTrue(exc == null);
 		assertEquals(200, response.getStatus());
@@ -165,6 +165,7 @@ public class TestREST {
 			if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 				successfulOps++;
 			} else {
+				@SuppressWarnings("unused")
 				String taskResponse = response.readEntity(String.class);
 			}
 			response.close();
