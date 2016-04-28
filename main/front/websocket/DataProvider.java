@@ -1,4 +1,4 @@
-package test.lowlevel;
+package front.websocket;
 
 import java.io.IOException;
 import java.util.List;
