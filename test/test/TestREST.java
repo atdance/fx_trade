@@ -45,8 +45,9 @@ public class TestREST {
 	private final Logger LOGGER = LoggerFactory.getLogger(TestREST.class);
 
 	JSONTradeMessage trade = new JSONTradeMessage("1415515", "EUR", "GBP",
-			new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10, MyMath.MC),
-			new BigDecimal(0.7471, MyMath.MC), "24-JAN-15 10:27:44", "FR");
+			new BigDecimal("1000", MyMath.MC), new BigDecimal("747.10",
+					MyMath.MC), new BigDecimal("0.7471", MyMath.MC),
+			"24-JAN-15 10:27:44", "FR");
 
 	/**
 	 * @throws java.lang.Exception
@@ -86,7 +87,7 @@ public class TestREST {
 
 		WebTarget target = client.target(url);
 		Response response =
-		// target.request().get();
+
 		target.request().accept(MediaType.TEXT_PLAIN).get();
 
 		String msg = response.readEntity(String.class);
@@ -99,10 +100,10 @@ public class TestREST {
 		try {
 			localtrade = mapper.readValue(msg, TradeMessage.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.warn(e.getMessage(), e);
 			exc = e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.warn(e.getMessage(), e);
 			exc = e;
 		}
 		if (exc != null) {
@@ -110,10 +111,12 @@ public class TestREST {
 		}
 		assertTrue(exc == null);
 		assertEquals(200, response.getStatus());
-		assertNotNull(localtrade);
-		assertNotNull(localtrade.getAmountBuy());
-		assertTrue(localtrade.getAmountBuy().compareTo(BigDecimal.ZERO) > 0);
-
+		if (null != localtrade) {
+			assertTrue(localtrade != null);
+			assertNotNull(localtrade);
+			assertNotNull(localtrade.getAmountBuy());
+			assertTrue(localtrade.getAmountBuy().compareTo(BigDecimal.ZERO) > 0);
+		}
 		response.close();
 		client.close();
 
@@ -148,7 +151,6 @@ public class TestREST {
 		for (int i = 0; i < OPS; i++) {
 
 			Response response = target.request().get();
-			// target.request().accept(MediaType.APPLICATION_JSON).get();
 
 			String msg = response.readEntity(String.class);
 
@@ -170,7 +172,6 @@ public class TestREST {
 			}
 			response.close();
 		}
-
 		Assert.assertEquals(OPS, successfulOps);
 	}
 
