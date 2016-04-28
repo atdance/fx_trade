@@ -12,6 +12,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Servlet Filter implementation It limits the rate of incoming requests at the
  * Application level .
@@ -37,13 +40,9 @@ public class RateLimiter implements Filter {
 	public RateLimiter() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-	 */
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
+	private static Logger LOG = null;
+	static {
+		LOG = LoggerFactory.getLogger(RateLimiter.class);
 	}
 
 	/**
@@ -60,7 +59,7 @@ public class RateLimiter implements Filter {
 		elapsedMillis = TimeUnit.NANOSECONDS.toMillis(now - before);
 
 		if (enabled & elapsedMillis < this.TIME_LIMIT_MILLIS) {
-			// LOG.info("NOK  " + elapsedMillis + " vs " + TIME_LIMIT_MILLIS);
+			LOG.info("NOK  " + elapsedMillis + " vs " + TIME_LIMIT_MILLIS);
 			res.sendError(429);
 			res.addIntHeader("Retry/After", (int) TIME_LIMIT_MILLIS);
 			before = now;
@@ -78,6 +77,15 @@ public class RateLimiter implements Filter {
 	 */
 	@Override
 	public void destroy() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 */
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
 	}
 
 	public static void enable() {
