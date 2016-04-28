@@ -11,20 +11,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import common.MyTime;
 
 /**
  * Micro-tests before implementing features in main code
  *
  */
 public class Various {
-	Logger LOG = LoggerFactory.getLogger(Various.class);
+	Logger LOGGER = LoggerFactory.getLogger(Various.class);
 	final public static ThreadLocal<Random> threadLocalRandom = new ThreadLocal<Random>() {
 		@Override
 		protected Random initialValue() {
@@ -37,31 +32,19 @@ public class Various {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	// @Test
 	public void test() {
 		Map<String, String> countries = new HashMap<>();
 		for (String iso : Locale.getISOCountries()) {
 			Locale l = new Locale("", iso);
-			// System.out.format("%s,%s \n", l.getDisplayCountry(), iso);
 			countries.put(l.getDisplayCountry(), iso);
 		}
 
-		// LOG.info(countries.get("Switzerland"));
+		LOGGER.info(countries.get("Switzerland"));
 
 		try {
 			Date date = formatter.parse("24-JAN-15 10:27:44");
-			LOG.info(date.toString());
+			LOGGER.info(date.toString());
 
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -76,23 +59,6 @@ public class Various {
 
 		resp = "[{\"name\":\"New York\",\"data\":[{\"x\":0,\"y\":11},{\"x\":1,\"y\":11},{\"x\":2,\"y\":9},{\"x\":3,\"y\":7}]},{\"name\":\"London\",\"data\":[{\"x\":0,\"y\":6},{\"x\":1,\"y\":2},{\"x\":2,\"y\":4},{\"x\":3,\"y\":7}]},{\"name\":\"Tokyo\",\"data\":[{\"x\":0,\"y\":31},{\"x\":1,\"y\":26},{\"x\":2,\"y\":34},{\"x\":3,\"y\":31}]}]";
 		System.out.format("%s,\n", resp);
-	}
-
-	@Test
-	public void ss() {
-		Random r = new Random();
-
-		MyTime timer = new MyTime();
-		int i = 2000000;
-		for (int j = 0; j < i; j++) {
-			// Math.random();
-			// ThreadLocalRandom.current().nextInt(100);
-			// threadLocalRandom.get().nextInt(100);
-			r.nextInt(100);
-		}
-
-		LOG.info(timer.toString());
-
 	}
 
 }
