@@ -69,17 +69,6 @@ public class CurrencyMarket {
 
 	// private volatile static CurrencyMarket localInstance = null;
 
-	// private CurrencyMarket() {
-	// cachedVolume.put(Currencies.EUR.name().toLowerCase(), BigDecimal.ZERO);
-	// cachedVolume.put(Currencies.GBP.name().toLowerCase(), BigDecimal.ZERO);
-	// }
-
-	// public static synchronized CurrencyMarket getInstance() {
-	// CurrencyMarket tempInstance = localInstance;
-
-	// if (tempInstance == null) {
-	// synchronized (CurrencyMarket.class) {
-	// tempInstance = localInstance;
 	// if (tempInstance == null) {
 	// tempInstance = new CurrencyMarket();
 	// localInstance = tempInstance;
@@ -154,8 +143,8 @@ public class CurrencyMarket {
 	}
 
 	private final TradeMessage defaultMsg = new TradeMessage("134256", "EUR",
-			"GBP", new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10,
-					MyMath.MC), new BigDecimal(0.7471, MyMath.MC),
+			"GBP", new BigDecimal("1000", MyMath.MC), new BigDecimal("747.10",
+					MyMath.MC), new BigDecimal("0.7471", MyMath.MC),
 			"17-APR-15 10:27:44", "FR");
 
 	/**
