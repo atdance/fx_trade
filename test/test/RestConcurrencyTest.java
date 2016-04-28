@@ -30,6 +30,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +46,10 @@ import front.restapi.JSONTradeMessage;
  *
  */
 public class RestConcurrencyTest {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(RestConcurrencyTest.class);
+
 	static final AtomicInteger successfulOps = new AtomicInteger(0);
 	static final int maxThreadCount = 50;
 
@@ -51,8 +57,9 @@ public class RestConcurrencyTest {
 	final static String URL_GET_VOLUME = Common.URL_BASE + "/trade/volume";
 
 	static JSONTradeMessage trade = new JSONTradeMessage("333", "EUR", "GBP",
-			new BigDecimal(1000, MyMath.MC), new BigDecimal(747.10, MyMath.MC),
-			new BigDecimal(0.7471, MyMath.MC), "21-APR-15 10:27:44", "FR");
+			new BigDecimal("1000", MyMath.MC), new BigDecimal("747.10",
+					MyMath.MC), new BigDecimal("0.7471", MyMath.MC),
+			"21-APR-15 10:27:44", "FR");
 
 	/**
 	 * @throws java.lang.Exception
@@ -62,7 +69,7 @@ public class RestConcurrencyTest {
 		try {
 			RateLimiter.disable();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info(e.getMessage(), e);
 		}
 	}
 
@@ -75,7 +82,7 @@ public class RestConcurrencyTest {
 			pool.awaitTermination(3, TimeUnit.SECONDS);
 			pool.shutdown();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info(e.getMessage(), e);
 		}
 	}
 
@@ -89,7 +96,7 @@ public class RestConcurrencyTest {
 
 			successfulOps.set(0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info(e.getMessage(), e);
 		} finally {
 			RateLimiter.enable();
 			// client.close();
@@ -126,6 +133,9 @@ public class RestConcurrencyTest {
 }
 
 abstract class MyTask implements Runnable {
+
+	protected static final Logger LOGGER = LoggerFactory
+			.getLogger(MyTask.class);
 	int THRESHOLD = 500;
 	private final CountDownLatch aReady;
 	private final CountDownLatch aStart;
@@ -147,11 +157,11 @@ abstract class MyTask implements Runnable {
 			actuallyrun();
 
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			LOGGER.info(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.info(e.getMessage(), e);
 		} finally {
 			aDone.countDown(); // Tell timer we're done
 		}
@@ -198,7 +208,13 @@ class GetTask extends MyTask {
 				response.readEntity(String.class);
 			}
 		} finally {
-			client.close();
+			if (null != client) {
+				try {
+					client.close();
+				} catch (Exception e) {
+					LOGGER.warn(e.getMessage(), e);
+				}
+			}
 		}
 	}
 }
@@ -236,8 +252,13 @@ class PostTask extends MyTask {
 				response.readEntity(String.class);
 			}
 		} finally {
-			client.close();
+			if (null != client) {
+				try {
+					client.close();
+				} catch (Exception e) {
+					LOGGER.warn(e.getMessage(), e);
+				}
+			}
 		}
-
 	}
 }
