@@ -18,6 +18,7 @@ dependency-reduced-pom.xml
 README.html
 *.class
 *.orig
+*.java.orig
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
