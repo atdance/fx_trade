@@ -157,7 +157,7 @@ public class TradeAPI extends APICommon {
 	@Produces(EventChannel.SERVER_SENT_EVENTS)
 	public EventChannel getEvents() {
 		EventChannel ec = new EventChannel();
-		test.lowlevel.DataProvider.addEventChannel(ec);
+		front.websocket.DataProvider.addEventChannel(ec);
 		return ec;
 	}
 }
