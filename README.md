@@ -4,13 +4,29 @@
 Tomcat 8 or equivalent Servlet container 3.0 ready .
 Java JVM 7 .
 
-## LIMITATIONS
-Only two currencies are allowed : EUR, GBP.
-Only these origin countries are allowed: FRA, IRL, UK, USA .
-
 ## ARCHITECTURE
 
 ![Alt text](restapi.jpg "architecture")
+
+
+## Frameworks used
+- JSR 356: Java API for WebSocket, Tyrus-spi
+- Java EE: JAX-RS, Servlet API, Servlet filters
+- Server Sent events in Jersey.
+- Java SE 8
+- Apache Commons Lang
+- Slf4j
+- Jackson for XML
+- Maven & Git
+- Junit
+	
+- TO DO : JSR 349 with JBoss Hybernate validator
+- TO DO : SonarQube and PMD
+- TO DO : Dropwizard framework
+- TO DO : Shade maven plugin
+- TO DO : Jetty embedded server
+- TO DO : Lombok
+
 
 ## ENDPOINTS   
 - For testing that the service is up and running: http://<host>:8080/restapi/rest/trade/gettest?tradeid=1
@@ -40,4 +56,8 @@ pair market.
 - The API is rate limited.
 - Input data is validated.
 - Logged input validation failures.
-- Strong typing: incoming data is strogly typed as quickly as possible. 
+- Strong typing: incoming data is strongly typed as quickly as possible. 
+
+## LIMITATIONS
+Only two currencies are allowed : EUR, GBP.
+Only these origin countries are allowed: FRA, IRL, UK, USA .
