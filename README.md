@@ -20,12 +20,13 @@ Java JVM 7 .
 - Maven & Git
 - Junit
 	
-- TO DO : JSR 349 with JBoss Hybernate validator
-- TO DO : SonarQube and PMD
-- TO DO : Dropwizard framework
-- TO DO : Shade maven plugin
-- TO DO : Jetty embedded server
-- TO DO : Lombok
+### TO DO
+- JSR 349 with JBoss Hybernate validator
+- SonarQube and PMD
+- Dropwizard command and exception mapper
+- Shade maven plugin
+- Jetty embedded server
+- Lombok
 
 
 ## ENDPOINTS   
