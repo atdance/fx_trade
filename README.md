@@ -9,6 +9,10 @@ Java JVM 7 .
 ![Alt text](restapi.jpg "architecture")
 
 
+## Demo with random data
+![Alt text](http://www.bondsbiz.com/trade/random.html "Forex live demo"")
+
+
 ## Frameworks used
 -Backend
 - - JSR 356: Java API for WebSocket, Tyrus-spi
@@ -20,6 +24,7 @@ Java JVM 7 .
 - - Jackson for XML
 - - Maven & Git
 - - Junit
+
 -Frontend
 - - Rickshaw Javascript real time charting
 	
