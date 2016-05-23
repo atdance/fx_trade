@@ -17,12 +17,14 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class AppConfig extends ResourceConfig {
 
+	/**
+	 * register Jackson ObjectMapper resolver
+	 */
 	public AppConfig() {
 		super(front.restapi.TradeAPI.class, common.TradeMessage.class,
-				common.Volume.class,
-				// register Jackson ObjectMapper resolver
-				MyObjectMapperProvider.class, JacksonFeature.class);
+				common.Volume.class, MyObjectMapperProvider.class,
+				JacksonFeature.class);
 
-		packages("restapi;common");
+		packages("front.restapi;common");
 	}
 }
