@@ -26,7 +26,7 @@ import front.restapi.APICommon;
  */
 @Path("tradetest")
 public class RestSErvlet extends APICommon {
-	Logger LOG = LoggerFactory.getLogger(RestSErvlet.class);
+	//Logger LOG = LoggerFactory.getLogger(RestSErvlet.class);
 
 	@GET
 	@Path("/getnonjax")
@@ -34,7 +34,7 @@ public class RestSErvlet extends APICommon {
 	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
 	public Response readBeanJSONP(@Context HttpServletRequest request,
 			@QueryParam("tradeid") final Long pID) {
-		// LOG.info("GET nonJAX");
+		// //LOG.info("GET nonJAX");
 		Response res = null;
 		try {
 			res = TradeServices.getInstance(TradeMessage.class).serviceGet(pID);
@@ -47,7 +47,7 @@ public class RestSErvlet extends APICommon {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getIt() {
-		LOG.info("xxx GET text_plain");
+		//LOG.info("xxx GET text_plain");
 		return "TradeAPI Text, reply: Got it!";
 	}
 
@@ -55,7 +55,7 @@ public class RestSErvlet extends APICommon {
 	@Path("/refresh2")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String refresh() {
-		LOG.info("xxx GET refresh json");
+		//LOG.info("xxx GET refresh json");
 
 		String resp = "[{'name':'New York','data':[{'x':0,'y':11},{'x':1,'y':11},{'x':2,'y':9},{'x':3,'y':7}]},{'name':'London','data':[{'x':0,'y':6},{'x':1,'y':2},{'x':2,'y':4},{'x':3,'y':7}]},{'name':'Tokyo','data':[{'x':0,'y':31},{'x':1,'y':26},{'x':2,'y':34},{'x':3,'y':31}]}]";
 
@@ -70,7 +70,7 @@ public class RestSErvlet extends APICommon {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String gotIt() {
-		LOG.info("xxx GET text_html");
+		//LOG.info("xxx GET text_html");
 		return "<h1>TradeAPI Html reply: Got it!</h1>";
 	}
 }
