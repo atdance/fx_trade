@@ -1,4 +1,4 @@
-#FX Market Trade Processor
+#Forex Market Trade Processor
 
 ## INSTALLATION REQUIREMENTS
 Tomcat 8 or equivalent Servlet container 3.0 ready .
