@@ -34,7 +34,7 @@ public class MyEncoder implements Encoder.Text<Volume>, Decoder.Text<Volume> {
 
 	/*
 	 * Not implemented .
-	 * 
+	 *
 	 * @see javax.net.websocket.Decoder.Text#decode(java.lang.String)
 	 */
 	@Override
@@ -73,7 +73,7 @@ public class MyEncoder implements Encoder.Text<Volume>, Decoder.Text<Volume> {
 	/*
 	 * We can always return true, as this decoder can work with any messages
 	 * used by this application
-	 *
+	 * 
 	 * @see javax.net.websocket.Decoder.Text#willDecode(java.lang.String)
 	 */
 	@Override
