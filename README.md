@@ -10,7 +10,8 @@ Java JVM 7 .
 
 
 ## Demo with random data
-![Alt text](http://www.bondsbiz.com/trade/random.html "Forex live demo"")
+
+[Forex live demo](http://www.bondsbiz.com/trade/random.html)
 
 
 ## Frameworks used
