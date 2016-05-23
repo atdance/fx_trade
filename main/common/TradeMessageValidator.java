@@ -52,22 +52,8 @@ public class TradeMessageValidator {
 	}
 
 	public void validate(TradeMessage pMsg) throws IllegalArgumentException {
-		/*
-		 * checkArgString(pMsg.userId); checkValidInputChars(pMsg.userId);
-		 * checkArgString(pMsg.currencyFrom); checkArgString(pMsg.currencyTo);
-		 * checkArgString(pMsg.originatingCountry);
-		 *
-		 * checkCurrency(pMsg.currencyFrom); checkCurrency(pMsg.currencyTo);
-		 *
-		 * checkAmount(pMsg.amountSell); checkAmount(pMsg.amountBuy);
-		 *
-		 * checkRate(pMsg.rate);
-		 *
-		 * checkDateString(pMsg.timePlaced);
-		 *
-		 * checkArgString(pMsg.originatingCountry);
-		 * checkCountry(pMsg.originatingCountry);
-		 */}
+		return;
+	}
 
 	void checkArgString(String pVal) throws IllegalArgumentException {
 		if (null == pVal || pVal.isEmpty() || pVal.length() < 1) {
