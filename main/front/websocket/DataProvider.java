@@ -24,7 +24,7 @@ import common.Volume;
 public class DataProvider<PAYLOAD extends TradeMessage> extends
 		Services<PAYLOAD> {
 
-	static Logger logger = LoggerFactory.getLogger(DataProvider.class);
+	static Logger LOGGER = LoggerFactory.getLogger(DataProvider.class);
 
 	/** Broadcaster for server-sent events. */
 	private static SseBroadcaster sseBroadcaster = new SseBroadcaster();
@@ -76,7 +76,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 			try {
 				session.getRemote().sendObject(X);
 			} catch (IOException | EncodeException ex) {
-				logger.error(ex.getMessage(), ex);
+				LOGGER.error(ex.getMessage(), ex);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 				try {
 					session.getRemote().sendObject(DR);
 				} catch (IOException | EncodeException ex) {
-					logger.error(ex.getStackTrace().toString(), ex);
+					LOGGER.error(ex.getStackTrace().toString(), ex);
 				}
 			}
 		}
