@@ -100,14 +100,14 @@ public class TestREST {
 		try {
 			localtrade = mapper.readValue(msg, TradeMessage.class);
 		} catch (IOException e) {
-			LOGGER.warn(e.getMessage(), e);
+			//LOGGER.warn(e.getMessage(), e);
 			exc = e;
 		} catch (Exception e) {
-			LOGGER.warn(e.getMessage(), e);
+			//LOGGER.warn(e.getMessage(), e);
 			exc = e;
 		}
 		if (exc != null) {
-			LOGGER.info(exc.getCause() + "" + exc.getMessage());
+			//LOGGER.info(exc.getCause() + "" + exc.getMessage());
 		}
 		assertTrue(exc == null);
 		assertEquals(200, response.getStatus());
