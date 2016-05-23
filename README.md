@@ -10,15 +10,18 @@ Java JVM 7 .
 
 
 ## Frameworks used
-- JSR 356: Java API for WebSocket, Tyrus-spi
-- Java EE: JAX-RS, Servlet API, Servlet filters
-- Server Sent events in Jersey.
-- Java SE 8
-- Apache Commons Lang
-- Slf4j
-- Jackson for XML
-- Maven & Git
-- Junit
+-Backend
+- - JSR 356: Java API for WebSocket, Tyrus-spi
+- - Java EE: JAX-RS, Servlet API, Servlet filters
+- - Server Sent events in Jersey.
+- - Java SE 8
+- - Apache Commons Lang
+- - Slf4j
+- - Jackson for XML
+- - Maven & Git
+- - Junit
+-Frontend
+- - Rickshaw Javascript real time charting
 	
 ### TO DO
 - JSR 354: Java API for working with Money and Currencies,
