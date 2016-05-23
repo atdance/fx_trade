@@ -1,3 +1,4 @@
+
 .classpath
 *classpath*
 .classpath
@@ -30,3 +31,20 @@ README.html
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# PMD #
+ruleset.xml
+.pmd
+.eclipse-pmd
+
+# SONARQUBE #
+scanner.txt
+sonar-project.properties
+.sonar/
+
+dependency_tree.txt
+README2-md
+gitdaemon.bat
+serverstart.bat
+workflow.bat
+*.zip
