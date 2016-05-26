@@ -31,6 +31,7 @@ Java JVM 7 .
 - - Rickshaw Javascript real time charting
 	
 ### TO DO
+- Is it possible to substitute SSE with Java EE 7 ?
 - JSR 354: Java API for working with Money and Currencies,
 - JSR 349 with JBoss Hybernate validator
 - SonarQube and PMD
