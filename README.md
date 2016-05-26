@@ -18,7 +18,8 @@ Java JVM 7 .
 -Backend
 - - JSR 356: Java API for WebSocket, Tyrus-spi
 - - Java EE: JAX-RS, Servlet API, Servlet filters
-- - Server Sent events in Jersey.
+- - Server Sent events in Jersey
+- - Light broadcast with Tyrus
 - - Java SE 8
 - - Apache Commons Lang
 - - Slf4j
