@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Configuration status="error" monitorInterval="30">
+<Configuration status="trace" monitorInterval="30" name="testConfiguration"
+    strict="true"
+    schema="Log4J-V2.0.xsd">
 
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">

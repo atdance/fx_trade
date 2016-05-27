@@ -16,9 +16,10 @@ Java JVM 7 .
 
 ## Frameworks used
 -Backend
-- - JSR 356: Java API for WebSocket, Tyrus-spi
-- - Java EE: JAX-RS, Servlet API, Servlet filters
-- - Server Sent events in Jersey.
+- - Java EE 7: JAX-RS, Servlet API, JSR 356 WebSocket, Servlet filters
+- - Dependency Injection
+- - Server Sent events in Jersey
+- - Light broadcast with Tyrus
 - - Java SE 8
 - - Apache Commons Lang
 - - Slf4j
@@ -28,8 +29,12 @@ Java JVM 7 .
 
 -Frontend
 - - Rickshaw Javascript real time charting
+
+## Last release
+Restful services access easier with Dependency Injection to persistence .
 	
 ### TO DO
+- Is it possible to substitute SSE with Java EE 7 ?
 - JSR 354: Java API for working with Money and Currencies,
 - JSR 349 with JBoss Hybernate validator
 - SonarQube and PMD
