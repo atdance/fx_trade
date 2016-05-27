@@ -1,7 +1,4 @@
-/**
- *
- */
-package storage;
+package com.bondsbiz.trade.business.storage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,16 +6,16 @@ import java.util.List;
 
 /**
  * not thread safe list where elements can only be added and not removed
- * 
+ *
  * @param <K>
  *
  *
  */
-public class OnlyAddableList<T> implements Iterable<T> {
+class OnlyAddableList<T> implements Iterable<T> {
 	private final List<T> list;
 
 	public OnlyAddableList() {
-		list = new ArrayList<T>();
+		list = new ArrayList<>();
 	}
 
 	public boolean add(T t) {
@@ -39,7 +36,7 @@ public class OnlyAddableList<T> implements Iterable<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
