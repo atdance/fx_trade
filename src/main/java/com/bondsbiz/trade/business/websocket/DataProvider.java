@@ -1,10 +1,9 @@
-package front.websocket;
+package com.bondsbiz.trade.business.websocket;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.net.websocket.EncodeException;
-import javax.net.websocket.Session;
+import javax.inject.Inject;
+import javax.websocket.Session;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.glassfish.jersey.media.sse.EventChannel;
@@ -12,29 +11,30 @@ import org.glassfish.jersey.media.sse.SseBroadcaster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import services.Services;
-
-import common.TradeMessage;
-import common.Volume;
+import com.bondsbiz.trade.business.model.TradeMessage;
+import com.bondsbiz.trade.business.storage.CurrencyMarket;
+import com.bondsbiz.trade.business.model.MarketVolume;
 
 /**
  * First tests with websocket. Simple in-memory data storage for the
  * application.
  */
-public class DataProvider<PAYLOAD extends TradeMessage> extends
-		Services<PAYLOAD> {
+public class DataProvider<PAYLOAD extends TradeMessage> {
 
-	static Logger LOGGER = LoggerFactory.getLogger(DataProvider.class);
+	@Inject
+	static CurrencyMarket mkt;
+
+	static Logger logger = LoggerFactory.getLogger(DataProvider.class);
 
 	/** Broadcaster for server-sent events. */
 	private static SseBroadcaster sseBroadcaster = new SseBroadcaster();
 
 	/** Map that stores web socket sessions corresponding to a given X ID. */
 	@SuppressWarnings("rawtypes")
-	private static final MultivaluedHashMap<Integer, Session> webSockets = new MultivaluedHashMap<Integer, Session>();
+	private static final MultivaluedHashMap<Integer, Session> webSockets = new MultivaluedHashMap<>();
 
 	synchronized boolean addL(int xId) {
-		Volume X = getVolume();
+		final MarketVolume X = getMarketVolume();
 		if (X != null) {
 			// if (X.list == null) {
 			// X.list = new ArrayList<>();
@@ -69,15 +69,17 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 *            New web socket session to be registered.
 	 */
 	@SuppressWarnings("unchecked")
-	synchronized void addWebSocket(int xId, Session<?> session) {
+	synchronized void addWebSocket(int xId, Session session) {// Session<?> MICH
+																// session) {
 		webSockets.add(xId, session);
-		Volume X = getVolume();
+		final MarketVolume X = getMarketVolume();
 		if (X != null) {
-			try {
-				session.getRemote().sendObject(X);
-			} catch (IOException | EncodeException ex) {
-				LOGGER.error(ex.getMessage(), ex);
-			}
+			// try {
+			session.getAsyncRemote().sendObject(X);
+			// MICH session.getRemote().sendObject(X);
+			// } catch (IOException | EncodeException ex) {
+			// logger.error(ex.getMessage(), ex);
+			// }
 		}
 	}
 
@@ -91,9 +93,12 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 * @param session
 	 *            Web socket session to be removed.
 	 */
-	static synchronized void removeWebSocket(int xId, Session<?> session) {
+	static synchronized void removeWebSocket(int xId, Session session) {// MICH
+																		// Session<?>
+																		// session)
+																		// {
 		@SuppressWarnings("rawtypes")
-		List<Session> sessions = webSockets.get(xId);
+		final List<Session> sessions = webSockets.get(xId);
 		if (sessions != null) {
 			sessions.remove(session);
 		}
@@ -110,15 +115,16 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	 *            if the X was cleared (i.e. all list were deleted).
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void wsBroadcast(int xId, Volume DR) {
-		List<Session> sessions = webSockets.get(xId);
+	private static void wsBroadcast(int xId, MarketVolume DR) {
+		final List<Session> sessions = webSockets.get(xId);
 		if (sessions != null) {
-			for (Session session : sessions) {
-				try {
-					session.getRemote().sendObject(DR);
-				} catch (IOException | EncodeException ex) {
-					LOGGER.error(ex.getStackTrace().toString(), ex);
-				}
+			for (final Session session : sessions) {
+				// try {
+				session.getAsyncRemote().sendObject(DR);
+				// MICH session.getRemote().sendObject(DR);
+				// } catch (IOException | EncodeException ex) {
+				// logger.error(ex.getStackTrace().toString(), ex);
+				// }
 			}
 		}
 	}
@@ -126,8 +132,8 @@ public class DataProvider<PAYLOAD extends TradeMessage> extends
 	/**
 	 * @return
 	 */
-	private Volume getVolume() {
-		return vMapper.volume();
+	private MarketVolume getMarketVolume() {
+		return mkt.volume();
 	}
 
 }
