@@ -19,6 +19,8 @@ Java JVM 7 .
 - - Java EE 7: JAX-RS, Servlet API, JSR 356 WebSocket, Servlet filters
 - - Dependency Injection
 - - Server Sent events in Jersey
+- - Server Sent events in Jersey
+- - Light broadcast with Tyrus
 - - Light broadcast with Tyrus
 - - Java SE 8
 - - Apache Commons Lang
