@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bondsbiz.trade.MyTime;
+import com.bondsbiz.trade.business.model.CurrencyPair;
+import com.bondsbiz.trade.business.model.Exchange;
 import com.bondsbiz.trade.business.model.TradeMessage;
 import com.bondsbiz.trade.business.services.Manager;
 import com.bondsbiz.trade.business.websocket.DataProvider;
@@ -100,26 +103,19 @@ public class TradeAPI {
 	@POST
 	@Path("/add")
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_XML })
-	public Response writeTrade(@Context HttpServletRequest request, final TradeMessage pMsg) {
-		LOG.info(" " + pMsg);
+	public Response writeTrade(@Context HttpServletRequest request, @Valid final TradeMessage pMsg) {
 		Response res = null;
-		try {
-			res = manager.insert(pMsg);
-			cacheGraph.clear();
-			cacheAll.clear();
-			// WsAnnotation.sendAll();
 
-		} catch (final IllegalArgumentException ex) {
-			LOG.warn(ex.getMessage(), ex);
-			final String msg = ex.getMessage();
-			LOG.warn(msg);
-
-			res = Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(msg).build();
-
-		} catch (final Exception ex) {
-			LOG.warn(ex.getMessage(), ex);
-			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		}
+		//CurrencyPair currencyPair = new CurrencyPair(pMsg.getCurrencyFrom(), pMsg.getCurrencyTo());
+		//Exchange exchange = new Exchange(currencyPair, pMsg.getAmountSell(), pMsg.getAmountBuy());
+		//res = manager.insert(exchange);
+		//cacheGraph.clear();
+		//cacheAll.clear();
+		
+		// WsAnnotation.sendAll();
+		
+		res =  Response.status(Status.OK).type(MediaType.APPLICATION_XML).build();
+		
 		return res;
 	}
 

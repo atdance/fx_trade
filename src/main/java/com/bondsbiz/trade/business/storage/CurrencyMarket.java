@@ -6,6 +6,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.ejb.Stateless;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import com.bondsbiz.trade.MyMath;
 import com.bondsbiz.trade.business.model.Currencies;
 import com.bondsbiz.trade.business.model.Exchange;
-import com.bondsbiz.trade.business.model.TradeMessage;
 import com.bondsbiz.trade.business.model.MarketVolume;
+import com.bondsbiz.trade.business.model.TradeMessage;
 
 /**
  * Contains information about the market constituted by two currencies. Thread
@@ -57,24 +58,31 @@ public class CurrencyMarket {
 		cachedVolume.put(Currencies.GBP.name().toLowerCase(), BigDecimal.ZERO);
 	}
 
-	public void add(Exchange obj) {
-		writeLock.lock();
-		LOG.debug(" curMarket add " + obj.getAmountBuy());
-		try {
-			exchanges.add(obj);
-
-			currency1VolumeTotal = currency1VolumeTotal.add(obj.getAmountSell());
-			currency2VolumeTotal = currency2VolumeTotal.add(obj.getAmountBuy());
-
-			cachedVolume = null;
-
-			cachedVolume = new MarketVolume();
-			cachedVolume.put(Currencies.EUR.name().toLowerCase(), currency1VolumeTotal);
-			cachedVolume.put(Currencies.GBP.name().toLowerCase(), currency2VolumeTotal);
-		} finally {
-			writeLock.unlock();
-		}
+	public boolean add1(@Valid Exchange obj) {
+		return true;
 	}
+	// boolean add(@Valid Exchange obj) {
+	// writeLock.lock();
+	// boolean res = false;
+	/*
+	 * try { currency1VolumeTotal =
+	 * currency1VolumeTotal.add(obj.getAmountSell()); currency2VolumeTotal =
+	 * currency2VolumeTotal.add(obj.getAmountBuy());
+	 * 
+	 * exchanges.add(obj);
+	 * 
+	 * cachedVolume = null;
+	 * 
+	 * cachedVolume = new MarketVolume();
+	 * cachedVolume.put(Currencies.EUR.name().toLowerCase(),
+	 * currency1VolumeTotal);
+	 * cachedVolume.put(Currencies.GBP.name().toLowerCase(),
+	 * currency2VolumeTotal); res = true; } catch (NullPointerException e) {
+	 * 
+	 * } finally { writeLock.unlock(); }
+	 */
+	// return res;
+	// }
 
 	public List<Exchange> getAll() {
 		readLock.lock();
@@ -117,7 +125,7 @@ public class CurrencyMarket {
 			"17-APR-15 10:27:44", "FR");
 
 	public TradeMessage createTrade() {
-		return defaultMsg;
+		return  defaultMsg;
 	}
 
 }

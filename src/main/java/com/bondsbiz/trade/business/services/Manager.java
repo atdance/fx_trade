@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -21,10 +22,8 @@ public class Manager implements OperationsInterface {
 	@Inject
 	CurrencyMarket storage;
 
-	private static Logger LOG = null;
-	static {
-		LOG = LoggerFactory.getLogger(Manager.class);
-	}
+	private static Logger LOG = LoggerFactory.getLogger(Manager.class);
+
 	protected static final String NOK = "NOK", OK = "OK ", SUCCESS = " SUCCESS ", FAILED_STRING = " FAILED ";
 
 	/*
@@ -33,18 +32,15 @@ public class Manager implements OperationsInterface {
 	 * @see services.OperationsInterface#insert(java.lang.Object)
 	 */
 	@Override
-	public Response insert(TradeMessage record) {
+	public Response insert(@Valid Exchange record) {
 		Response res = null;
 
-		try {
-			final Exchange exc = record.getExchange();
-			storage.add(exc);
-			// return 0L;
+		if (storage.add1(record)) {
 			final String message = "ADD " + SUCCESS;
-			res = Response.status(Status.OK).entity(message).build();
-		} catch (final Exception ex) {
+			res = Response.status(Status.OK).build();
+			// Response.ok(message).build();
+		} else {
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).build();
-			LOG.warn(ex.getMessage(), ex);
 		}
 		return res;
 	}
@@ -87,7 +83,7 @@ public class Manager implements OperationsInterface {
 			resp = storage.getAll();
 		} catch (final Exception ex) {
 			resp = Collections.emptyList();
-			LOG.error(ex.getMessage(), ex);
+			// LOG.error(ex.getMessage(), ex);
 		}
 		return Response.status(Status.OK).entity(resp).build();
 	}

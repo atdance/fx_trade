@@ -3,6 +3,7 @@ package com.bondsbiz.trade.business.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -26,7 +27,7 @@ public class Exchange {
 	/**
 	 *
 	 */
-	public Exchange(CurrencyPair pair, BigDecimal pSell, BigDecimal pBuy) {
+	public Exchange(@Valid CurrencyPair pair,@Valid  BigDecimal pSell,@Valid  BigDecimal pBuy) {
 		aPair = pair;
 		amountSell = pSell;
 		amountBuy = pBuy;

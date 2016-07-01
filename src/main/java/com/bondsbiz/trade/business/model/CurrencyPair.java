@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class CurrencyPair {
+public class CurrencyPair {
 	@NotNull
 	private String currencyFrom;
 	@NotNull
