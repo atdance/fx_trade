@@ -11,7 +11,7 @@ Java JVM 7 .
 
 ## Demo with random data
 
-[Forex live demo](http://www.bondsbiz.com/trade/random.html)
+[Forex live demo](https://atdance.github.io/fx_trade/)
 
 
 ## Frameworks used
