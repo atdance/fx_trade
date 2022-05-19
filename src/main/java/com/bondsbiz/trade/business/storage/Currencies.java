@@ -1,4 +1,4 @@
-package com.bondsbiz.trade.business.model;
+package com.bondsbiz.trade.business.storage;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +10,7 @@ import org.joda.money.CurrencyUnit;
  * values of the array data in the javascript graph renderer.
  */
 public enum Currencies {
+
 	EUR("EUR"), GBP("GBP");
 
 	private final static Set<String> values = new HashSet<>(Currencies.values().length);

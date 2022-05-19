@@ -1,6 +1,6 @@
 package com.bondsbiz.trade.business.model;
 
-import javax.persistence.Entity;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,22 +10,25 @@ import javax.xml.bind.annotation.XmlRootElement;
  * A currencyPair of currencies
  *
  */
-@Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CurrencyPair {
 	@NotNull
 	private String currencyFrom;
+
 	@NotNull
 	private String currencyTo;
 
+	/**
+	 * public for jon-b
+	 */
 	public CurrencyPair() {
 	}
 
 	/**
 	 * thread-safe immutable class representing a Currency currencyPair.
 	 */
-	public CurrencyPair(String currencyFrom, String currencyTo) {
+	public CurrencyPair(@Valid String currencyFrom, @Valid String currencyTo) {
 		this.currencyFrom = currencyFrom;
 		this.currencyTo = currencyTo;
 	}
@@ -84,9 +87,10 @@ public class CurrencyPair {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "CurrencyPair [currencyFrom=" + currencyFrom + ", currencyTo=" + currencyTo + "]";
-	}
+	// @Override
+	// public String toString() {
+	// return "CurrencyPair [currencyFrom=" + currencyFrom + ", currencyTo=" +
+	// currencyTo + "]";
+	// }
 
 }

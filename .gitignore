@@ -1,17 +1,16 @@
-
-.classpath
-*classpath*
+.gitignore
 .classpath
 git-daemon-export-ok
 .settings/
 target/
 build/
+gitignored
+bin
 WebContent/WEB-INF/lib
 git*
 .checkstyle
 .project
 .settings
-bin
 dependency-reduced-pom.xml
 *.sublime-*
 /scratch
@@ -44,7 +43,5 @@ sonar-project.properties
 
 dependency_tree.txt
 README2-md
-gitdaemon.bat
-serverstart.bat
-workflow.bat
+*.bat
 *.zip

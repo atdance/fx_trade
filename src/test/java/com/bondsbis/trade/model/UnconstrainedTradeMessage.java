@@ -1,67 +1,45 @@
-package com.bondsbiz.trade.business.model;
+package com.bondsbis.trade.model;
 
 import java.math.BigDecimal;
 
-//import javax.persistence.Entity;
-//import javax.persistence.Version;
-import javax.validation.Valid;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Implements a TradeMessage message as for this JSON form of: {"userId":
- * "134256", "currencyFrom": "EUR", "currencyTo": "GBP", "amountSell": 1000,
- * "amountBuy": 747.10, "rate": 0.7471, "timePlaced" : "24-JAN-15 10:27:44", "
- * originatingCountry" : "FR"}
- *
+ * Implements a TradeMessage where validation constraints are not enforced. Used
+ * for testing. Otherwise constraint validation would be enforced before sending
+ * a message used for the online test.
  *
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TradeMessage {
-	@NotNull
-	@Size(min = 2, max = 256)
+public class UnconstrainedTradeMessage {
+
 	private String userId = null;
 
-	@NotNull
 	private String currencyFrom = null;
 
-	@NotNull
 	private String currencyTo = null;
 
-	@NotNull
 	private BigDecimal amountSell = null;
 
-	@NotNull
 	private BigDecimal amountBuy = null;
 
-	@NotNull
-	@DecimalMin("0")
-	@DecimalMax("100000")
 	private BigDecimal rate = null;
 
-	@NotNull
 	private String timePlaced = null;
 
-	@NotNull
 	private String originountry = null;
 
 	private long version;
 
-	/**
-	 * public for json-b
-	 */
-	public TradeMessage() {
+	public UnconstrainedTradeMessage() {// JAXB needs this
 	}
 
-	public TradeMessage(@Valid String pUserId, String pCurrencyFrom, String pCurrencyTo, @Valid BigDecimal pAmountSell,
-			@Valid BigDecimal pAmountBuy, @Valid BigDecimal pRate, String pTimePlaced, String pOriginCountry) {
+	public UnconstrainedTradeMessage(String pUserId, String pCurrencyFrom, String pCurrencyTo, BigDecimal pAmountSell,
+			BigDecimal pAmountBuy, BigDecimal pRate, String pTimePlaced, String pOriginCountry) {
 
 		this.userId = pUserId;
 		this.rate = pRate;
@@ -72,7 +50,6 @@ public class TradeMessage {
 		this.currencyTo = pCurrencyTo;
 		this.amountBuy = pAmountBuy;
 		this.amountSell = pAmountSell;
-
 	}
 
 	public String getUserId() {
@@ -146,7 +123,7 @@ public class TradeMessage {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		TradeMessage other = (TradeMessage) obj;
+		UnconstrainedTradeMessage other = (UnconstrainedTradeMessage) obj;
 		if (amountBuy == null) {
 			if (other.amountBuy != null) {
 				return false;
