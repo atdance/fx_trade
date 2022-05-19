@@ -1,4 +1,4 @@
-#Forex Market REST interface
+# FOREX MARKET REST API
 
 Usage of JAX-RS with CDI 2, JSON-B, javax validation, Grizzly and Jetty.
 Tests with partitions. Note the important workflow IT test.
@@ -77,20 +77,20 @@ Java JVM 7 .
 
 ## TECHNICAL NOTES
 - DIFFICULTIES FOUND
--- It was extremely time using the matching of the dependencies of all versions.
+- - It was extremely time using the matching of the dependencies of all versions.
 I do not think this is good for Jersey. 
 - JETTY SUPPORT
--- beans.xml is only needed by Jetty. This deployment uses a Custom Application subclass.
+- - beans.xml is only needed by Jetty. This deployment uses a Custom Application subclass.
 You can read Jetty document paragraphs 4.7.1.1 Custom Application subclass
 	and Table 4.1. "Servlet 3 Pluggability Overview" for
 more details for when Application subclass and web.xml could be avoided. 
--- Packaging war was needed for Jersey. 									 
--- Jetty could be run without including the without including the jetty-maven-plugin.
--- info about the famous "WELD-000144: CDI API version mismatch. CDI 1.0 
+- - Packaging war was needed for Jersey. 									 
+- - Jetty could be run without including the without including the jetty-maven-plugin.
+- - info about the famous "WELD-000144: CDI API version mismatch. CDI 1.0 
 	API detected on classpath" and json-b and MOXy 
 	are included in the comments of the pom.xml file.	
 - GRIZZLY SUPPORT
--- see AppGrizzly class
+- - see AppGrizzly class
 	
 - OTHER
 The projects version decides all dependencies of jax.rx: <version>2.35</version>
